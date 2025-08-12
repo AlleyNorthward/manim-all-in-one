@@ -1,7 +1,0 @@
-@startuml test
-class "This is a test" as A{
-    + A()
-    + BBB
-    + C()
-}
-@enduml
