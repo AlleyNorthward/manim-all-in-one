@@ -5,7 +5,7 @@ from manim import(
     normalize, rotate_vector, interpolate,
 )
 import numpy as np
-from manim import *
+
 class MyCurvedLine(VMobject):
     def __init__(
             self,
@@ -97,4 +97,5 @@ class MyCurvedLine(VMobject):
             Uncreate(self, run_time = run_time),
             FadeOut(self.arrows, run_time = run_time)
         )
+
 
