@@ -7,6 +7,8 @@ from ..BulletedListBrace import BulletedListBrace
 from ..MyCurvedLine import MyCurvedLine
 from ..MovingCode import MovingCode
 from ..FileMobject import FileMobject
+from ..BigTree import BigTree
+from ..ListNode import ListNode
 
 class VideoText:
     def __init__(
@@ -60,6 +62,9 @@ class VideoText:
 
         self.CAPTION2 = r"""
             \&
+        """
+        self.CAPTION3 = r"""
+            Sequential
         """
 
 class SqListVideo:
@@ -185,3 +190,130 @@ class SqListVideo:
 
         self.scene.play(define_code.transform_both_svg_and_rectangle(code_grps[1], code_grps[2], 13, 13))
         self.scene.wait(11)
+
+    def define_list_Sq_animation(self):
+        CODE_PATH = ASSETS_DIR /"1定义.cpp"
+        movingcode = MovingCode(CODE_PATH)
+        moving_copy = movingcode[0].copy()
+        movingcode.to_edge(LEFT, buff = 0.6)
+
+        self.scene.play(FadeIn(moving_copy[0]))
+        self.scene.play(moving_copy[0].animate.to_edge(LEFT, buff = 0.6))
+        self.scene.remove(moving_copy)
+        self.scene.add(movingcode[0])
+        self.scene.wait()
+
+        SVG_PATH = ASSETS_DIR.parent/"场景切分"/"电脑1.svg"
+        computer = SVGMobject(SVG_PATH) 
+        computer.scale(3).to_edge(RIGHT, buff = 0.4).shift(DOWN*0.4)
+        # self.add(movingcode.to_edge(LEFT, buff = 0.6))
+
+        self.scene.play(FadeIn(computer))
+        self.scene.wait(0.5)
+        self.scene.play(Write(movingcode[1][0]), Write(movingcode[2][0]))
+        self.scene.play(Circumscribe(movingcode[2][0]))
+        self.scene.wait()
+
+        l1 = ListNode().set_info(r"e_1").set_node_color()
+        l2 = ListNode().set_info(r"e_2",).set_node_color()
+        l3 = ListNode().set_info(r"\cdots", height = 0.07).set_node_color()
+        l4 = ListNode().set_info(r'e_i').set_node_color()
+
+        l_grps = VGroup(l1, l2, l3, l4).arrange(RIGHT, buff = 0)
+        l_grps.set(width = computer.width - 0.57)
+        l_grps.scale(0.87)
+        l_grps.move_to(computer.get_center())
+
+        my_line = MyCurvedLine(movingcode[2][1][12].get_center()+DOWN*0.12, l_grps[0].get_center()+DOWN*0.24, points=4)
+        self.scene.play(
+            Succession(
+                FadeIn(l_grps[0]),
+                FadeIn(l_grps[1]),
+                FadeIn(l_grps[2]),
+                FadeIn(l_grps[3]),
+            ),
+            AnimationGroup(
+                FadeIn(movingcode[1][1]), 
+                FadeIn(movingcode[2][1]),
+                my_line.create()
+            )
+        )
+
+        self.scene.play(
+            my_line.fadeout(),
+            FadeOut(my_line.arrows),
+            FadeIn(movingcode[1][2]),
+            FadeIn(movingcode[2][2]),
+            FadeIn(movingcode[1][6]),
+            FadeIn(movingcode[2][6])
+        )
+
+        self.scene.play(
+            Write(movingcode[1][3]),
+            Write(movingcode[2][3]),
+        )
+        self.scene.play(Circumscribe(movingcode[2][3]))
+        self.scene.wait(3.5)
+
+        self.scene.play(
+            Write(movingcode[1][4]),
+            Write(movingcode[2][4])
+        )
+        self.scene.play(
+            Write(movingcode[1][5]),
+            Write(movingcode[2][5]),
+        )
+
+        self.scene.wait(4.5)
+
+    def initList_Sq_animation(self):
+        CODE_PATH = ASSETS_DIR / "2InitList_Sq.cpp"
+        mycode = MovingCode(CODE_PATH, formatter_style=MovingCode.get_cpp_stycle())
+        mycode.width = self.scene.camera.frame_width - 1.7
+        mycode.move_to(ORIGIN)
+        self.scene.play(FadeIn(mycode),run_time = 1.5)
+        self.scene.wait(0.5)
+        self.scene.play(mycode.animate.to_edge(UP, buff = 0.3))
+        
+        tree = BigTree(self.scene, run_time=0.6)
+        tree.create_tree(0.5, )
+
+        caption3 = Tex(self.total_text.CAPTION3, tex_template = TexTemplateLibrary.ctex)
+        caption3.set_color("#7CFC00")
+        caption3.to_corner(DL,buff = 2).shift(LEFT)
+        self.scene.play(Write(caption3))
+        self.scene.wait()
+
+        chars = VGroup(*[
+            mycode[2][0][i]
+            for i in range(16, 18)
+        ])
+
+        curve_line = MyCurvedLine(chars.get_center() + DOWN*0.2, caption3.get_center()+UP*0.3)
+
+        self.scene.play(curve_line.create())
+        self.scene.wait(4)
+
+        moving_svg = mycode.get_svg(2, 'B')
+        moving_rect = mycode.get_rect(2)
+
+        self.scene.play(curve_line.fadeout(), FadeOut(curve_line.arrows), FadeOut(caption3), run_time = 2)
+        self.scene.play(FadeIn(moving_svg), FadeIn(moving_rect), run_time = 0.75)
+        self.scene.wait(0.25)
+        self.scene.play(mycode.transform_both_svg_and_rectangle(moving_rect, moving_svg, 3, 3, 4), run_time = 0.85)
+        self.scene.wait(0.25)
+        self.scene.play(mycode.transform_both_svg_and_rectangle(moving_rect, moving_svg, 6, 7, 8), run_time = 0.9)
+        self.scene.wait(4.5)
+
+    def destroy_and_clear_animation(self):
+        CODE_PATH1 = ASSETS_DIR / "3DestroyList_Sq.cpp"
+        CODE_PATH2 = ASSETS_DIR / "4ListClear_Sq.cpp"
+        movingcode1 = MovingCode(CODE_PATH1)
+        movingcode2 = MovingCode(CODE_PATH2)
+        moving_grps = VGroup(movingcode1, movingcode2).arrange(DOWN, buff = 0.5)
+        moving_grps.set(height = self.scene.camera.frame_height - 1)
+
+        self.scene.play(FadeIn(moving_grps[0]), FadeIn(moving_grps[1]))
+        self.scene.play(Wiggle(moving_grps[0]))
+        self.scene.play(Wiggle(moving_grps[1]))
+        self.scene.wait(4.5)
