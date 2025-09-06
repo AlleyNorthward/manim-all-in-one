@@ -91,8 +91,8 @@ class Eye(VGroup):
         return ref_line
 
     @override_animate(look_at)
-    def _look_animation(self, point:Point3DLike = RIGHT, **anim_kwargs):
-        line = self.look_at(point)
+    def _look_animation(self, point_or_mobject:Point3DLike = RIGHT, **anim_kwargs):
+        line = self.look_at(point_or_mobject)
         return AnimationGroup(Add(self.eyes), MoveAlongPath(self.pupil, line, **anim_kwargs),)
     
     def restore_pupil(self):
@@ -128,4 +128,5 @@ class Eye(VGroup):
             **anim_kwargs
         )
         
+
 
