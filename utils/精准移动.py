@@ -1,4 +1,8 @@
-from manim import *
+from manim import (
+    Mobject, 
+    ORIGIN,
+    np,
+)
 from manim.typing import Point3DLike, Vector3D
 
 def set_position(
