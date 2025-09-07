@@ -47,13 +47,12 @@ def change_mobject_flexible(mob:Mobject, matrixes, start = 0, end = 0.5, N = 16)
         if i % if_info == 0:
             step.append(i)
         
-        if len(step) == 2:
-            
+        if len(step) == 2:       
             steps.append(tuple(step))
             step.clear()
             step.append(i)
 
-    print(points_length)
+
     apply_matrix(points, matrixes, steps, about_point = mob.get_center())
 
     smooth_path = VMobject().set_points_smoothly(points).match_style(mob)
@@ -91,3 +90,4 @@ class Test(Scene):
         ]
         changed_circle = change_mobject_flexible(circle, matrixes, N = 16, start = 0.5, end = 1)
         self.add(changed_circle)
+
