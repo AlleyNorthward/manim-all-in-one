@@ -71,6 +71,7 @@ def change_mobject_flexible(mob:Mobject, matrixes, start = 0, end = 0.5, N = 16)
     return mobject
 
 
+# 测试接口
 class Test(Scene):
     def construct(self):
         circle = Circle().set_fill(opacity=1)
@@ -90,6 +91,3 @@ class Test(Scene):
         ]
         changed_circle = change_mobject_flexible(circle, matrixes, N = 16, start = 0.5, end = 1)
         self.add(changed_circle)
-
-%manim $_RF Test
-
