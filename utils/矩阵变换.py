@@ -1,6 +1,6 @@
 from manim import *
 # 思考一下，哪些是暴露出来的接口，供用户输入
-# 我现在只想输出mobject，变换矩阵，分段数目，分段位置
+# 我现在只想输入mobject，变换矩阵，分段数目，分段位置
 # 然后直接输出变换后的mobject，而且不改变输入的mobject
 
 def apply_matrix(points, matrixes, steps, about_point = ORIGIN):
@@ -92,3 +92,4 @@ class Test(Scene):
         self.add(changed_circle)
 
 %manim $_RF Test
+
