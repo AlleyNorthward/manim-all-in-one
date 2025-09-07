@@ -1,5 +1,5 @@
 from manim import *
-# 思考一下，那些是暴露出来的接口，供用户输出
+# 思考一下，哪些是暴露出来的接口，供用户输入
 # 我现在只想输出mobject，变换矩阵，分段数目，分段位置
 # 然后直接输出变换后的mobject，而且不改变输入的mobject
 
@@ -90,4 +90,5 @@ class Test(Scene):
         ]
         changed_circle = change_mobject_flexible(circle, matrixes, N = 16, start = 0.5, end = 1)
         self.add(changed_circle)
+
 %manim $_RF Test
