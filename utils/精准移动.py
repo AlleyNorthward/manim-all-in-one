@@ -32,12 +32,19 @@ def set_position(
         上面的9个锚点, 从而使移动更加灵活.
 
         编写示例:
-        class Example(Scene):
-            def construct(self):
-                s = Square()
-                square = Square().scale(3)
-                s.set_position(square.get_left(), RIGHT)
-                self.add(s, square)
+            Mobject.set_position = set_position
+            
+            class Example(Scene):
+                def construct(self):
+                    s = Square()
+                    square = Square().scale(3)
+                    self.add(square)
+                    self.play(s.animate.set_position(square.get_corner(UL), UL))
+                    
+        这个动画虽然直接使用move_to() shift()等也能实现, 
+        但是我这里直接转换锚点, 就能直接实现.这样做的另一
+        个好处是, 可以使用矩形任意划分屏幕,  且能够更加
+        灵活的移动.
     """
     if isinstance(point_or_mobject, Mobject):
         target = point_or_mobject.get_center()
@@ -47,3 +54,4 @@ def set_position(
     move_mob = self.get_critical_point(anchor)
     self.shift((target - move_mob) * coor_mask)
     return self
+
