@@ -3,16 +3,22 @@ from manim import(
     AnimationGroup, Succession, MoveAlongPath, Restore, Wait, MoveToTarget,
     RIGHT,
     RED_B, BLACK,
-    Scene,
     override_animate,
 )
 from manim.typing import Point3DLike
-from CreatureEye import CreatureEye
 
 import os
 from pathlib import Path
 ASSDIR = Path(__file__).resolve().parent.parent.parent/"assets"/"creature"
 
+# 修改日志
+""" ...
+    @auther 巷北
+    @time 2025.9.11   
+    去除了将scene作为参数传入__init__()
+    给self.mouth.stretch_to_fig_height()添加判断语句, 以适应多mode嘴巴不同的情况.
+    ...
+"""
 class ACreature(SVGMobject):
     # 说明
     """
@@ -52,6 +58,8 @@ class ACreature(SVGMobject):
     # 属性
     """
         mode                代表人物造型
+        scene               本来不必添加,后来发现不得不在__class__中传入,故设为属性. #弃案 已清除该属性.
+        
         body                身体部分   层级结构最下面               由.svg文件而来,自己设计
         eyes                眼睛部分   层级结构在body上面           由SingleEye而来,比例为3b1b设计
         mouth               嘴巴       层级结构在最上面             由.svg文件而来,自己设计
@@ -103,7 +111,6 @@ class ACreature(SVGMobject):
     """
     def __init__(
             self,
-            scene:Scene,
             mode = 'plain',
             body_color = RED_B,
             mouth_color = BLACK,
@@ -122,8 +129,11 @@ class ACreature(SVGMobject):
             eye_stroke_width
         )
 
-        #! 经过深思熟虑,决定以后将场景对象添加于此,减少不必要麻烦.
-        scene.add(self)
+        #弃案 经过深思熟虑,决定以后将场景对象添加于此,减少不必要麻烦. 于2025.9.11 21:55废弃
+        #! 还是存在问题使用self._scene = scene会报错.建议减少将scene传入Mobject避免引发不必要问题.
+        #解决方法 还是妥协吧,创建完对象后就调用self.add()添加场景中.play()时也不会产生问题.也不一定非得这样,
+        #解决方法 灵活添加吧.一切都是因为AnimationGroup与Add可能存在bug导致的.
+        # scene.add(self)  废弃
 
     def get_svg_file_path(self, mode):
         PATH_FILE = os.path.join(ASSDIR, f'{mode}.svg')
@@ -154,13 +164,15 @@ class ACreature(SVGMobject):
 
         # 设立嘴巴
         self.mouth = self[3]
-        self.mouth.stretch_to_fit_height(0.125)
+        #todo 这里是因为微调了嘴巴长度,但是仅仅对'plain'适用.等后续不同mode也可能会灵活调整,随时更改.
+        if self.get_mode() == 'plain':
+            self.mouth.stretch_to_fit_height(0.125)
         self.mouth.set_color(mouth_color)
 
         # 初始化眼睛
         self.eyes = self._draw_eyes(eye_stroke_width)
-        self.right_eye: CreatureEye = self.eyes[0]
-        self.left_eye: CreatureEye = self.eyes[1]
+        self.right_eye: SingleEye = self.eyes[0]
+        self.left_eye: SingleEye = self.eyes[1]
 
         self._set_submobjects(self.body, self.eyes, self.mouth)
 
@@ -203,6 +215,7 @@ class ACreature(SVGMobject):
         return self.mouth.get_color()
     
     def change_mode(self, mode):
+        # ! 当前对象是由多个组组成的,通过match_style的方式,无法确定是否会对所有的submobjects统一匹配style.可能存在问题.
         new_self = self.__class__(mode = mode)
         new_self.match_style(self)
         new_self.match_height(self)
@@ -258,6 +271,7 @@ class ACreature(SVGMobject):
             # 直接解决方案是在scene中添加对象.
             # 可是还是为了与manim动画思想保持一致,play与add尽量不共存,虽然没有任何影响.
 
+            # 已解决  妥协了,使用self.add()添加吧.
             self.left_eye.animate.blink(),
             self.right_eye.animate.blink(),
             **anim_kwargs
