@@ -25,6 +25,12 @@ class Testing(Scene):
         这么来看,self.add 和 Add作用一样.
         但是对于复杂Mobject来说,其层级结构受组的影响.
         这也是主要问题所在,一般情况下不会发生,但发生后需要有解决处理方案.
+
+        最后找到问题在哪了,AnimationGroup与Add可能存在问题。
+        最安全的方法是每创建一个对象，就self.add()这个对象在场景中,这个是最安全的
+        另外,觉得麻烦,可以将scene作为参数传入对象中,每初始化结束,就scene.add()添加到场景中
+        这样也可以.
+        我觉得创建mobject,直接将scene作为参数传入吧，靠谱点。
     """
     def construct(self):
         
@@ -118,4 +124,5 @@ class Testing(Scene):
         print(self.moving_mobjects)
         print(self.animations)
         print(self.get_attrs())
+
         print(self.get_mobject_family_members())
