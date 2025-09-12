@@ -1,13 +1,13 @@
 from manim import(
-    VGroup,SVGMobject, Graph, Tex,TexTemplateLibrary,
+    VGroup,SVGMobject, Graph, Tex,TexTemplateLibrary, VMobjectFromSVGPath, 
     UpdateFromAlphaFunc, FadeIn, Succession, Create, AnimationGroup,SpiralIn,FadeOut,
     ORIGIN, LEFT, RIGHT, UP, DOWN, 
     TEAL, MAROON_B, BLUE, GREEN, BLUE_A, GRAY_BROWN,
     Scene,
     # config,
-    override_animation
+    override_animation,
+    override_animate
 )
-from manim import *
 from manim.utils.rate_functions import ease_in_out_cubic, smooth
 import svgelements as se
 from .ACreature import ACreature
