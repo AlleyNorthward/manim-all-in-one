@@ -1,6 +1,17 @@
 from manim import(
     interpolate_color
 )
+
+# 修改日志
+"""
+    ...
+    @auther巷北
+    @time 2025.9.13
+    修改装饰器函数名.两者名字一样,一个函数调用,一个装饰器调用.导入时选择一个即可.
+    优化了装饰器中参数传入.
+"""
+
+
 def interpolate_color_range(*colors):
     # 说明
     """
@@ -56,7 +67,7 @@ def interpolate_color_range(*colors):
     return f
 
 
-def interpolate_color_range_decorator(*colors):
+def interpolate_color_range(*colors):
     # 说明
     """
         @auther 巷北
@@ -95,7 +106,7 @@ def interpolate_color_range_decorator(*colors):
             def construct(self):
                 square = Square(fill_opacity=1).scale(2)
                 
-                @interpolate_color_range_decorator(RED, BLUE, YELLOW)
+                @interpolate_color_range(RED, BLUE, YELLOW)
                 def my_alpha_updater(mob, alpha, color):
                     mob.set_color(color)
 
@@ -109,14 +120,15 @@ def interpolate_color_range_decorator(*colors):
     colors_steps = [(colors[i], colors[i+1]) for i in range(partition-1)]
     alpha_steps = [(dx * i, dx * (i+1)) for i in range(partition-1)]
     def decorator(f):
-        def wrapper(mob, alpha, *args, **kwargs):
+        def wrapper(*args, **kwargs):
+            mob, alpha, *others = args
             for i_count,(c_s,a_s) in enumerate(zip(colors_steps,alpha_steps)):
                 if a_s[0] <= alpha <= a_s[1]:
                     d_alpha = alpha - dx * i_count
                     c_alpha = d_alpha / dx
                     color = interpolate_color(c_s[0], c_s[1], c_alpha)
-                    return f(mob, alpha, color, *args, **kwargs)
-            return f(mob, alpha, colors[-1], *args, **kwargs)
+                    return f(mob, alpha, color, *others, **kwargs)
+            return f(mob, alpha, colors[-1], *others, **kwargs)
         return wrapper
     return decorator
 
