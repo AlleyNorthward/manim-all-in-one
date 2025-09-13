@@ -12,7 +12,7 @@ from manim.utils.rate_functions import ease_in_out_cubic, smooth
 import svgelements as se
 from .ACreature import ACreature
 
-# 修改日志
+# _修改日志
 """...
     @auther 巷北
     @time 2025.9.11 23:02 
@@ -28,9 +28,13 @@ from .ACreature import ACreature
     更换了lgorithm字体,并且重新写了expand()的对应算法,并且添加装饰器,可以使用.animate生成动画.
     去除了一些非必要属性(以前不知道self.和参数传入有什么用,分析了这么多代码后,也知道了,self.设计的属性,最好要跟本类相关,而不是万物都设为属性.).
     ...
+    @auter 巷北
+    @time 2025.9.13
+    注释添加了下划线_
+    ...
 """
 
-# 待办
+# _待办
 """
     动画最后,将Aflip()一下,
     最后一边放大,一边FadeOut(),
@@ -50,7 +54,7 @@ TREE_PATH = ASSETS_DIR / "tree.svg"
 
 class AlgorithmBanner(VGroup):
 
-    # 说明
+    # _说明
     """
         @auther 巷北
         @time 2025.9.12 21:33
@@ -63,7 +67,7 @@ class AlgorithmBanner(VGroup):
 
     """
 
-    # 属性
+    # _属性
     """
         A                                   标志性设计
         tree
@@ -76,7 +80,7 @@ class AlgorithmBanner(VGroup):
         scale_factor                        源码有的,目前不好去除
     """
 
-    # 私有方法
+    # _私有方法
     """
         _init_A()
         _init_node()
@@ -89,7 +93,7 @@ class AlgorithmBanner(VGroup):
         fadeout()                           同上,通过FadeOut()访问
     """
     
-    # 公有方法
+    # _公有方法
     """
         scale()                             统一缩小,防止lgorithm未加入self而无法缩小
         expand()                            _expand()接口,通过.animate访问
@@ -291,7 +295,7 @@ class AlgorithmBanner(VGroup):
             if alpha == 1:
                 self.remove(*[self.lgorithm])
                 self.add_to_back(self.lgorithm)
-                # 弃案 源代码存在 mob.shapes.set_z_index(0)
+                # _弃案 源代码存在 mob.shapes.set_z_index(0)
                 mob.shapes.save_state()
                 mob.A.save_state()
 
@@ -342,7 +346,7 @@ class AlgorithmBanner(VGroup):
                 run_time = run_time * 1 / 3,
                 rate_func = smooth,
             ),
-            # 待优化 self.A.animate.flip(),
+            # _待优化 self.A.animate.flip(),
             **anim_kwargs
         )
     @classmethod
@@ -359,7 +363,7 @@ class AlgorithmBanner(VGroup):
             FadeOut(self.lgorithm, run_time = run_time)
         )
     
-    # 说明 上面存在bug是, 如果没有添加lgorithm或者title, FadeOut对象整体的时候, 仍然显现.
+    # _说明 上面存在bug是, 如果没有添加lgorithm或者title, FadeOut对象整体的时候, 仍然显现.
     def fadeout_without_lgorithm(self, run_time = 1):
         return AnimationGroup(
             FadeOut(self.shapes, run_time =run_time),
@@ -369,4 +373,5 @@ class AlgorithmBanner(VGroup):
     @staticmethod
     def clear_all_mobjects(scene: Scene):
         scene.clear()
+
 
