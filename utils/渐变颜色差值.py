@@ -2,18 +2,20 @@ from manim import(
     interpolate_color
 )
 
-# 修改日志
+# _修改日志
 """
     ...
-    @auther巷北
+    @auther 巷北
     @time 2025.9.13
     修改装饰器函数名.两者名字一样,一个函数调用,一个装饰器调用.导入时选择一个即可.
     优化了装饰器中参数传入.
+    修改注释,添加_
+    ...
 """
 
 
 def interpolate_color_range(*colors):
-    # 说明
+    # _说明
     """
         @auther 巷北
         @time 2025.9.13
@@ -31,7 +33,7 @@ def interpolate_color_range(*colors):
             关于函数逻辑,后续再说吧.先了解下闭包,一口也吃不成个胖子.
     """
 
-    # 代码示例
+    # _代码示例
     """
             class Example(Scene):
             def construct(self):
@@ -68,7 +70,7 @@ def interpolate_color_range(*colors):
 
 
 def interpolate_color_range(*colors):
-    # 说明
+    # _说明
     """
         @auther 巷北
         @time 2025.9.13 13:22
@@ -100,7 +102,7 @@ def interpolate_color_range(*colors):
             而这个函数就是一个非常好的装饰器的例子.忘了来看看就好.结合实践,永远比盲目练习强.
     """
 
-    # 代码示例
+    # _代码示例
     """
             class Example(Scene):
             def construct(self):
@@ -131,5 +133,6 @@ def interpolate_color_range(*colors):
             return f(mob, alpha, colors[-1], *others, **kwargs)
         return wrapper
     return decorator
+
 
 
