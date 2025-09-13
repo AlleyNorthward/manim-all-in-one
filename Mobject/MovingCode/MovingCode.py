@@ -19,7 +19,7 @@ from utils.路径装饰器 import svg_path  #! 注意路径修改
     将get_svg_and_rect()中获取的svg与rect加入到MovingCode的submobjects中,不过get_svg,get_rect仍未添加.#_弃案 rect添加到self中, 移动存在bug,建议不要添加
     更改了transform_both_svg_and_rectangle()的调用方式,通过接口transform以及.animate访问
     给transform_svg()以及transform_remark_rectangle()添加了装饰器,通过.animate访问,使得其逻辑性更强.动画要么通过动画类产生,要么通过.animate生成.
-    将get_svg()重命名为_get_svg(),并新定义get_svg(),返回_get_svg()(因为被装饰器修饰后, 无法直接访问mode, 而是通过path获取的.其实是私有方法,不如添加接口.)
+    将get_svg()重命名为_init_svg(),并新定义get_svg(),返回_init_svg()(因为被装饰器修饰后, 无法直接访问mode, 而是通过path获取的.其实是私有方法,不如添加接口.)
     ...
 """
 #! 经过测试,无法将svg、rect添加到self中,以后也别做尝试了.需要注意的是, 最后再去创建移动对象,要不然移动code后,移动对象不还在原处.
@@ -209,3 +209,4 @@ class MovingCode(Code):
             return self.mode
         return None
     
+
