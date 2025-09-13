@@ -1,5 +1,14 @@
 import os
+from pathlib import Path
 ASSETS_DIR = None
+
+
+# _修改日志
+"""
+    @auther 巷北
+    @time 2025.9.13
+    重新修改了装饰器2,使得其更具有一般性(符合我自己,assets文件夹下,我一般会分类,其中dir_name一般是类名).
+"""
 
 # _说明
 """
@@ -29,29 +38,6 @@ ASSETS_DIR = None
     个图, 产生问题.而装饰器2能装饰所有需要svg路径的方法, 因为提供了接口, 方便我们修改默认svg图.
 """
 
-# _代码示例
-""" 
-    待装饰函数/方法.
-    def get_svg(self,path, start):
-        pass
-        
-    装饰器1:
-    @svg_path
-    def get_svg(self, path, start):
-        pass
-    
-    调用:
-    m = self.get_svg(0) 此时调用mode = "candle"的svg图
-    m = self.get_svg(0, mode = 's') 获取名为s.svg的图像
-        
-    装饰器2:
-    @svg_path(mode)
-    def get_svg(self, path, start):
-        pass
-    调用:
-    m = self.get_svg(0) 同上
-    m = self.get_svg(0, mode = 's')同上.
-"""
 def svg_path(func):
     #_弃案 不具备一般性,对比学习使用.建议使用下面的
 
@@ -80,7 +66,7 @@ def svg_path(func):
 
 
 
-def svg_path(mode):
+def svg_path(mode, dir_name):
     #_代码示例
     """
             待装饰函数/方法.
@@ -88,13 +74,14 @@ def svg_path(mode):
                 pass
                 
             装饰器2:
-            @svg_path(mode)
+            @svg_path(mode, dir_name)
             def get_svg(self, path, start):
                 pass
             调用:
             m = self.get_svg(0) 同上
             m = self.get_svg(0, mode = 's')同上.
     """
+    ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets" / dir_name
     def decorator(func):
         def wrapper(self, *args, **kwargs):
             current_mode = kwargs.pop("mode", mode)
