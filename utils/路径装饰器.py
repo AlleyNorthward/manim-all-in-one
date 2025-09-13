@@ -100,7 +100,7 @@ def svg_path(mode):
             current_mode = kwargs.pop("mode", mode)
             path = os.path.join(ASSETS_DIR, f"{current_mode}.svg")
             if not os.path.exists(path):
-                path = os.path.join(ASSETS_DIR, "candle.svg")
+                path = os.path.join(ASSETS_DIR, f"{mode}.svg")
             return func(self, path, *args,**kwargs)
         return wrapper
     return decorator
