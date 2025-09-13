@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 ASSDIR = Path(__file__).resolve().parent.parent/"assets"/"A"
 
-# 修改日志
+# _修改日志
 """ ...
     @auther 巷北
     @time 2025.9.11   
@@ -22,9 +22,14 @@ ASSDIR = Path(__file__).resolve().parent.parent/"assets"/"A"
     @time 2025.9.12
     使用A时发现FadeIn()入场存在视觉问题,对原图片进行了修改
     所以层级发生变化,需要对部分代码进行修改.(主要是下标,几乎无影响)
+    ...
+    @auther 巷北
+    @time 2025.9.13
+    修改注释,添加_
+    ...
 """
 class ACreature(SVGMobject):
-    # 说明
+    # _说明
     """
         @auther: 巷北
         @time: 2025.9.9  22:43
@@ -59,7 +64,7 @@ class ACreature(SVGMobject):
     # 老师和学生人物.可是对比下发现学生有些丑.所以还是模仿3b1b,老师
     # 和学生用flip转换,这样节省了不少事,设计层面也方便了很多.
 
-    # 属性
+    # _属性
     """
         mode                代表人物造型
         scene               本来不必添加,后来发现不得不在__class__中传入,故设为属性. #弃案 已清除该属性.
@@ -69,7 +74,7 @@ class ACreature(SVGMobject):
         mouth               嘴巴       层级结构在最上面             由.svg文件而来,自己设计
     """
 
-    # 私有方法
+    # _私有方法
     """
         _init_structure()           创建整体结构 body,eyes,mouoth        
         get_svg_file_path()         得到svg路径.封装到内部,通过mode控制,避免用户复杂操作
@@ -82,7 +87,7 @@ class ACreature(SVGMobject):
 
     """
 
-    # 公有方法
+    # _公有方法
     """
         set_body_color()            这些属于setter和getter,其中setter都return self, 可搭配.animate使用
         get_body_color()
@@ -96,7 +101,7 @@ class ACreature(SVGMobject):
         blink()
     """
 
-    # 代码示例
+    # _代码示例
     """
         class ACreatureExample(Scene):
             def construct(self):
@@ -133,10 +138,10 @@ class ACreature(SVGMobject):
             eye_stroke_width
         )
 
-        #弃案 经过深思熟虑,决定以后将场景对象添加于此,减少不必要麻烦. 于2025.9.11 21:55废弃
+        #_弃案 经过深思熟虑,决定以后将场景对象添加于此,减少不必要麻烦. 于2025.9.11 21:55废弃
         #! 还是存在问题使用self._scene = scene会报错.建议减少将scene传入Mobject避免引发不必要问题.
-        #解决方法 还是妥协吧,创建完对象后就调用self.add()添加场景中.play()时也不会产生问题.也不一定非得这样,
-        #解决方法 灵活添加吧.一切都是因为AnimationGroup与Add可能存在bug导致的.
+        #_解决方法 还是妥协吧,创建完对象后就调用self.add()添加场景中.play()时也不会产生问题.也不一定非得这样,
+        #_解决方法 灵活添加吧.一切都是因为AnimationGroup与Add可能存在bug导致的.
         # scene.add(self)  废弃
 
     def get_svg_file_path(self, mode):
@@ -284,7 +289,7 @@ class SingleEye(VGroup):
 
     DOWN_OR_UP_RATIO = 0.02
 
-    # 说明
+    # _说明
     """
         @auther 巷北
         @time 2025.9.11
@@ -295,7 +300,7 @@ class SingleEye(VGroup):
         画一下,并且能够使用对应动画接口.
             所以说,这个类其实是私有类,不向用户开放.那么在manim底层,肯定也有许多私有类,可以去了解一下.
     """
-    # 属性
+    # _属性
     """
         pupil                       瞳孔, 是一个组 VGroup(black, dot)
         eye                         眼白
@@ -303,7 +308,7 @@ class SingleEye(VGroup):
         pupil_offset                瞳孔移动偏移量,感觉其实也没必要设为属性
     """
     
-    # 私有方法
+    # _私有方法
     """
         _init_eyes()                构建眼睛结构 [eye,pupil(VGroup(black, dot))]
         look()                      看向某处.返回的是移动线,方便MoveAlongPath移动
@@ -312,7 +317,7 @@ class SingleEye(VGroup):
         _blink_animation()          眨眼动画
     """
 
-    # 公有方法
+    # _公有方法
     """
         look_at()                   看向某处用户接口
         restore_pupil()             恢复瞳孔动画用户接口
@@ -459,6 +464,7 @@ class SingleEye(VGroup):
         
 
     
+
 
 
 
