@@ -250,7 +250,8 @@ class MyCurvedLine(VGroup):
         # self._set_submobjects(new_self.path, new_self.arrows) #! 更新放在这里. 这其实说明ACreature那里有问题.
         # todo become的设计思想是什么呢？“我看起来像另一个对象，但我本质上还是我，孩子(submobjects)不动.” 为遵循这一思想,注释掉上一行
         # todo 因为我也不知道修改submobjects与否,是否会产生问题.那么遵循设计者的思想,他既然没自动更新submobjects,那我也不动就好了.
-        # todo但需要知道的是,这里可能会产生bug,但大多数情况下应该不会.
-
+        # todo 但需要知道的是,这里可能会产生bug,但大多数情况下应该不会.
+        #_说明 虽然,change_mode()之后,submobjects并未更新,但是我们使用下标访问submobjects的话, 没有任何问题, 对象是更新了的.
         return self
         
+
