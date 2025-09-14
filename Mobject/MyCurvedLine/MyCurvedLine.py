@@ -23,26 +23,53 @@ import numpy as np
     增添iscurvedarrows判断参数接口, 提升性能.
 """
 
+
 class MyCurvedLine(VGroup):
+    #_属性
+    """
+        start                           初始点及末尾点
+        end
+
+        path                            路径
+        arrows                          指向箭头
+    """
+
+    #_私有方法
+    """
+        _get_curved_points()            _generate_points()方法的组成方法
+        _generate_points()              生成路径
+        _set_arrows()                   生成箭头
+
+        _create()                       动画部分
+        _fadeout()
+    """
+
+    #_公有方法
+    """
+        init_curved_arrows()            初始化部分,用户也可以主动转换.
+        Create()                        动画接口
+        UnCreate()
+    """
     
-#_代码示例
-"""
-    class Example(Scene):
-        def construct(self):
-            m = MyCurvedLine(LEFT*3+UP*2.21, DOWN*2+ RIGHT*2.3, points = 4)
-            self.add(m)
+    #_代码示例
+    """
+        class Example(Scene):
+            def construct(self):
+                m = MyCurvedLine(LEFT*3+UP*2.21, DOWN*2+ RIGHT*2.3, points = 4)
+                self.add(m)
 
-    class Example(Scene):
-        def construct(self):
-            m = MyCurvedLine(LEFT*3+UP*2.21, DOWN*2+ RIGHT*2.3, points = 4)
-            m.init_curved_arrows()
-            self.add(m)
+        class Example(Scene):
+            def construct(self):
+                m = MyCurvedLine(LEFT*3+UP*2.21, DOWN*2+ RIGHT*2.3, points = 4)
+                m.init_curved_arrows()
+                self.add(m)
 
-    class Test(Scene):
-        def construct(self):
-            m = MyCurvedLine(LEFT*3+UP*2.21, DOWN*2+ RIGHT*2.3, iscurvedarrows = True)
-            self.add(m)
-"""
+        class Test(Scene):
+            def construct(self):
+                m = MyCurvedLine(LEFT*3+UP*2.21, DOWN*2+ RIGHT*2.3, iscurvedarrows = True)
+                self.add(m)
+    """
+
     def __init__(
             self,
             start,
@@ -201,7 +228,6 @@ class MyCurvedLine(VGroup):
 
         self.add(curved_arrows)
         self.add(tip)
-
 
 
 
