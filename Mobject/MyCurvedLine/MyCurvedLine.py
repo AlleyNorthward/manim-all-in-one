@@ -23,6 +23,8 @@ import numpy as np
     增添iscurvedarrows判断参数接口, 提升性能.
 """
 
+class MyCurvedLine(VGroup):
+    
 #_代码示例
 """
     class Example(Scene):
@@ -41,7 +43,6 @@ import numpy as np
             m = MyCurvedLine(LEFT*3+UP*2.21, DOWN*2+ RIGHT*2.3, iscurvedarrows = True)
             self.add(m)
 """
-class MyCurvedLine(VGroup):
     def __init__(
             self,
             start,
@@ -200,6 +201,7 @@ class MyCurvedLine(VGroup):
 
         self.add(curved_arrows)
         self.add(tip)
+
 
 
 
