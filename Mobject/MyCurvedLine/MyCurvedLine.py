@@ -24,6 +24,7 @@ import numpy as np
     私有化init_curves_arrows(),提供change_mode接口
     解决submobjects无法更新bug(become之后再self.add(),且添加对象是新的引用eg:new_self,不要用self引用,否则不会改变)
     又选择回到初始(恢复上一条日志信息),具体原因见最后todo
+    增添了iscurvedarrows属性,便于访问.
 """
 #_待办
 """
@@ -36,6 +37,7 @@ class MyCurvedLine(VGroup):
     """
         start                           初始点及末尾点
         end
+        iscurvedarrows                  Create()它太慢了,提供接口,快些
 
         path                            路径
         arrows                          指向箭头
@@ -97,6 +99,7 @@ class MyCurvedLine(VGroup):
         self.end = end + LEFT*buff + UP*buff
         self._points = points
         self.thickness = thickness
+        self.iscurvedarrows = iscurvedarrows
         super().__init__(**kwargs)
 
         if iscurvedarrows:
@@ -166,7 +169,10 @@ class MyCurvedLine(VGroup):
     @override_animation(Create)
     def _create(self, run_time = 2,):
         self.remove(self.arrows) # 危险操作!  
-            
+        if self.iscurvedarrows:
+            run_time = 1
+        else:
+            run_time = run_time
         animation1 = Create(self.path, run_time = run_time*3/4),
         animation2 = FadeIn(self.arrows, run_time = run_time/4)
         s = Succession(animation1, animation2)
@@ -250,8 +256,7 @@ class MyCurvedLine(VGroup):
         # self._set_submobjects(new_self.path, new_self.arrows) #! 更新放在这里. 这其实说明ACreature那里有问题.
         # todo become的设计思想是什么呢？“我看起来像另一个对象，但我本质上还是我，孩子(submobjects)不动.” 为遵循这一思想,注释掉上一行
         # todo 因为我也不知道修改submobjects与否,是否会产生问题.那么遵循设计者的思想,他既然没自动更新submobjects,那我也不动就好了.
-        # todo 但需要知道的是,这里可能会产生bug,但大多数情况下应该不会.
-        #_说明 虽然,change_mode()之后,submobjects并未更新,但是我们使用下标访问submobjects的话, 没有任何问题, 对象是更新了的.
+        # todo但需要知道的是,这里可能会产生bug,但大多数情况下应该不会.
+
         return self
         
-
