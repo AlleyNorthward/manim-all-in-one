@@ -21,6 +21,12 @@ import numpy as np
     给get_curved_arrows()添加angle,灵活调整方向
     将get_curved_arrows()更名为init_curves_arrows并做出较大改变
     增添iscurvedarrows判断参数接口, 提升性能.
+    私有化init_curves_arrows(),提供change_mode接口
+    解决submobjects无法更新bug(become之后再self.add(),且添加对象是新的引用eg:new_self,不要用self引用,否则不会改变)
+"""
+#_待办
+"""
+    无
 """
 
 
@@ -50,7 +56,7 @@ class MyCurvedLine(VGroup):
         Create()                        动画接口
         UnCreate()
     """
-    
+
     #_代码示例
     """
         class Example(Scene):
@@ -88,17 +94,18 @@ class MyCurvedLine(VGroup):
     ):
         self.start = start + DOWN*buff + RIGHT*buff
         self.end = end + LEFT*buff + UP*buff
-        
+        self._points = points
+        self.thickness = thickness
         super().__init__(**kwargs)
 
         if iscurvedarrows:
-            self.init_curved_arrows(start, end, angle, curve_color, tan_color)
+            self._init_curved_arrows(start, end, angle, curve_color, tan_color)
 
         else:
             self.path = self._generate_points(start, end, curve_color, thickness, points)
             self.arrows = self._set_arrows(tan_length, tan_degrees, tan_color)
             self.set_stroke(opacity = stroke_opacity)
-
+        self._set_submobjects(self.path, self.arrows)
 
     def _get_curved_points(
             self, 
@@ -130,9 +137,12 @@ class MyCurvedLine(VGroup):
         path = VMobject().set_points_smoothly([start, *points, end])
         path.set_color(curve_color)
 
-        self.add(path)
         return path
-        
+    
+    def _set_submobjects(self, *mobs):
+        self.submobjects.clear()
+        self.add(*mobs)
+
     def _set_arrows(
             self, 
             tan_length, 
@@ -149,7 +159,6 @@ class MyCurvedLine(VGroup):
 
         tan_grps = VGroup(tangentline, tangentline2)
         tan_grps.set_color(tan_color)
-        self.add(tan_grps)
 
         return tan_grps
     
@@ -170,7 +179,7 @@ class MyCurvedLine(VGroup):
             FadeOut(self.arrows, run_time = run_time)
         )
     
-    def init_curved_arrows(
+    def _init_curved_arrows(
             self,
             start = None,
             end = None,
@@ -214,22 +223,33 @@ class MyCurvedLine(VGroup):
         """
         curved_arrows.remove(tip)
 
-        if hasattr(self, "path"):
-            self.remove(self.path)
-            self.path.become(curved_arrows)
-        else:
-            self.path = curved_arrows
+        self.path = curved_arrows
+        self.arrows = tip
 
-        if hasattr(self, "arrows"):
-            self.remove(self.arrows)
-            self.arrows.become(tip)
-        else:
-            self.arrows = tip
+    def change_mode(
+            self,
+            iscurvedarrows = True,
+            angle = PI/2,
+            **kwargs
+    ):
+        new_self = self.__class__(
+            start = self.start,
+            end = self.end,
+            points = self._points,
+            thickness = self.thickness,
+            iscurvedarrows = iscurvedarrows,
+            angle = angle,
+            **kwargs
+        )
+        #_待优化 这里的submobject总是无法改变.通过_set_submobjects()也无法改变.总是一开始创建的self的submobjects
+        #_待优化 调试时,输出*mobs,显示正常,但是在外面输出,总还是有问题.
+        #_已解决 become前后(不是前后,只能在后),需要_set_submobjects(),但是不要传入self引用的对象,而是要传入new_self引用的对象,这才是真正新创建的对象.
 
-        self.add(curved_arrows)
-        self.add(tip)
+        self.become(new_self)
+        self._set_submobjects(new_self.path, new_self.arrows) #! 更新放在这里. 这其实说明ACreature那里有问题.
 
-
+        return self
+        
 
 
 
