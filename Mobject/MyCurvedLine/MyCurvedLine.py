@@ -23,6 +23,7 @@ import numpy as np
     增添iscurvedarrows判断参数接口, 提升性能.
     私有化init_curves_arrows(),提供change_mode接口
     解决submobjects无法更新bug(become之后再self.add(),且添加对象是新的引用eg:new_self,不要用self引用,否则不会改变)
+    又选择回到初始(恢复上一条日志信息),具体原因见最后todo
 """
 #_待办
 """
@@ -246,10 +247,10 @@ class MyCurvedLine(VGroup):
         #_已解决 become前后(不是前后,只能在后),需要_set_submobjects(),但是不要传入self引用的对象,而是要传入new_self引用的对象,这才是真正新创建的对象.
 
         self.become(new_self)
-        self._set_submobjects(new_self.path, new_self.arrows) #! 更新放在这里. 这其实说明ACreature那里有问题.
+        # self._set_submobjects(new_self.path, new_self.arrows) #! 更新放在这里. 这其实说明ACreature那里有问题.
+        # todo become的设计思想是什么呢？“我看起来像另一个对象，但我本质上还是我，孩子(submobjects)不动.” 为遵循这一思想,注释掉上一行
+        # todo 因为我也不知道修改submobjects与否,是否会产生问题.那么遵循设计者的思想,他既然没自动更新submobjects,那我也不动就好了.
+        # todo但需要知道的是,这里可能会产生bug,但大多数情况下应该不会.
 
         return self
         
-
-
-
