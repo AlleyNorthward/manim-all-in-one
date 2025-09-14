@@ -25,6 +25,7 @@ import numpy as np
     解决submobjects无法更新bug(become之后再self.add(),且添加对象是新的引用eg:new_self,不要用self引用,否则不会改变)
     又选择回到初始(恢复上一条日志信息),具体原因见最后todo
     增添了iscurvedarrows属性,便于访问.
+    去除遗留危险代码self.remove(self.arrows) # 危险操作!  
 """
 #_待办
 """
@@ -168,7 +169,6 @@ class MyCurvedLine(VGroup):
     
     @override_animation(Create)
     def _create(self, run_time = 2,):
-        self.remove(self.arrows) # 危险操作!  
         if self.iscurvedarrows:
             run_time = 1
         else:
