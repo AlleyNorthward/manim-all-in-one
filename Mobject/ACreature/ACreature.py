@@ -29,6 +29,11 @@ ASSDIR = Path(__file__).resolve().parent.parent/"assets"/"A"
     进行了危险操作.将MovingCode代码copy到了这里,直接覆盖.后从history中找回,又copy回来. #todo有没有更安全提交、更改代码的方式?
     ...
 """
+
+#_待办
+"""
+    change_mode(),self.become()可能存在submobjects未更新情况,建议在其之后设计一下,并传入新对象.
+"""
 class ACreature(SVGMobject):
     # _说明
     """
@@ -465,6 +470,7 @@ class SingleEye(VGroup):
         
 
     
+
 
 
 
