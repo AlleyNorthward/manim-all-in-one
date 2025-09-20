@@ -1,4 +1,4 @@
-from cycler import cycle
+from itertools import cycle    
 from manim import(
     RoundedRectangle, MathTex,VGroup, SVGMobject, Tex, TexTemplateLibrary,
     Create, Succession, AnimationGroup, Restore, MoveToTarget,
