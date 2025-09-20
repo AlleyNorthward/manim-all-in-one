@@ -1,5 +1,6 @@
 from manim import *
 from itertools import cycle
+from typing import cast
 
 # 日志记录
 """
@@ -22,6 +23,15 @@ from itertools import cycle
     的日志记录,而是个人第一次使用终端使用vim的记录吧~~~(吐槽一下,中文vim使用起来很不友善啊,每次想
     快捷操作,一看是中文输入法,还得多按个按钮...)
     哎,文件名为Node,跟vim一个插件名重复了,再进来就有问题...
+
+    ...
+    @auther 巷北
+    @time 2025.9.20 23:30
+    设计了一下,用ListNodes继承SingleNode也不合理.因为ListNodes是组,而SingleNode是单一结点,设计了一下
+    发现,还是继承VGroup好,之后再集成相关功能.
+    另外,发现继承就必须要带有**kwargs,即使当前并没有东西要加入,因为底层会涉及manim相关的体系构建,都隐藏
+    在**kwargs之中.我是clear_points发现报错了,重新添加回**kwargs才没问题.不过目前继承VGroup的话,不会有
+    这个问题了,但建议还是要带有**kwargs.
 
     ...
 """
@@ -151,7 +161,7 @@ class SingleNode(RoundedRectangle):
         index.set(height=height).next_to(self, direction, buff=buff)
         index.set_color(color=color)
         self.add(index)
-        self.index = index
+        self.index:MathTex = index
 
         return index
 
@@ -172,7 +182,7 @@ class SingleNode(RoundedRectangle):
             self.remove(self.index)
 
 
-class ListNodes(SingleNode):
+class ListNodes(VGroup):
     def __init__(
         self,
         num=5,
@@ -180,48 +190,39 @@ class ListNodes(SingleNode):
         infos=None,
         indexes=None,
         isindex=False,
+        **kwargs
     ):
-        self.num = num
-        self._clear_points()
+        super().__init__(**kwargs)
 
-        self.listnodes = self._init_listnode_grps(num, infos, ref_length)
+        self.num = num
+
+        self._init_listnode_grps(num, infos, ref_length)
         if isindex:
             self.indexes = self._init_listnode_index(indexes)
-
-    def _clear_points(self):
-        self.clear_points()
-        self.submobjects = []
 
     def _init_listnode_grps(self, num, infos, ref_length):
         if ref_length is None:
             ref_length = 1.342 * num
 
         if infos is None:
-            grps = VGroup(
-                *[
-                    SingleNode().set_info(str(info)).set_node_color()
-                    for info in range(0, num)
-                ]
-            ).arrange(RIGHT, buff=0)
+            grps = [SingleNode().set_info(str(info)).set_node_color() for info in range(0, num)]
 
         else:
+            grps = [SingleNode().set_info(info).set_node_color() for info in infos]
 
-            grps = VGroup(
-                *[SingleNode().set_info(info).set_node_color() for info in infos]
-            ).arrange(RIGHT, buff=0)
-
-        grps.set(width=ref_length - 0.2)
-
-        self.add(grps)
-        return grps
+        self.add(*grps)
+        self.arrange(RIGHT, buff = 0)
+        self.set(width = ref_length - 0.2)
 
     def _init_listnode_index(
         self, indexes=None, height=0.2, direction=DOWN, buff=0.1, color=BLACK
     ):
 
         if hasattr(self, "indexes"):
-            self.remove(self.indexes)
-
+            for mob in self:
+                singlenode = cast(SingleNode, mob)
+                singlenode.remove(singlenode.index)
+                    
         if indexes is None:
 
             index_grps = VGroup(
@@ -239,18 +240,16 @@ class ListNodes(SingleNode):
                 ]
             )
         self.indexes = index_grps
-        self.add(index_grps)
 
         return index_grps
 
-    def set_index(self, indexes, height=0.2, direction=DOWN, buff=0.1, color=BLACK):
-
+    def set_indexes(self, indexes, height=0.2, direction=DOWN, buff=0.1, color=BLACK):
         indexes = self._init_listnode_index(indexes, height, direction, buff, color)
 
         return indexes
 
     def scale_single_node_infos(self, index=0, scale_factor=0.4):
-        node = self.listnodes[index]
+        node = self[index]
         node.tex.scale(scale_factor)
 
     def scale_nodes_infos(self: VGroup, indexes: list, scale_factors: list):
