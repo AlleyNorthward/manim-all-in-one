@@ -9,7 +9,22 @@ from typing import cast
     @time 2025.9.21 21:25
     从SingleNode中分支出来,正在做着下一步的规划
 """
+#_待办
+"""
+    刚才刚添加了待办,怎么没了...默认状态对s[0] 使用change_info修改info,视觉上靠下,不知道是SingleNode问题还是ListNodes问题.
+    源代码
+    
+from manim import *
+from ListNodes import ListNodes
+class Test(Scene):
+    def construct(self):
+        self.camera.background_color = "#ece6e2"
+        s = ListNodes()
+        s.set_indexes(["3", '4', "44", "444", '234'])
+        # s[0].change_info("3")
+        self.add(s)
 
+"""
 
 class ListNodes(VGroup):
     #_说明
