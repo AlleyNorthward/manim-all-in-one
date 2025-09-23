@@ -1,5 +1,6 @@
 from manim import*
 from SingleNode import SingleNode
+from typing import cast
 
 #_日志 
 """

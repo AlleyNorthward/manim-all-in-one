@@ -1,6 +1,5 @@
 from manim import *
 from itertools import cycle
-from typing import cast
 
 # 日志记录
 """
@@ -41,7 +40,7 @@ class SingleNode(RoundedRectangle):
 
     cycle_color = cycle(
         [
-            "#FFE4E1 ",
+            "#FFE4E1",
             "#DDA0DD",
             "#7CFC00",
             "#FFFF77",
