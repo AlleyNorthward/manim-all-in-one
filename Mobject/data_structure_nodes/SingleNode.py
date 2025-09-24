@@ -37,6 +37,15 @@ from itertools import cycle
     怎么说呢,今天打破了原则,像github网站中提交了些文件,然后git pull了...不知道代码是否被覆盖了,所以感觉
     这样做十分不安全啊...还得检查一下这部分代码有没有影响...哎,还是不能打破原则,git提交就一直git提交,本
     地代码可能是最新的,但是不一定会记得提交...
+    ...
+    @auther 巷北
+    @time 2025.9.24 19:34
+    发现了基本问题,单纯创建node,没问题,node内部添加info没问题,node外部添加index有问题.这回改变整体层级.
+    最严重的问题就是中心点改变了.我们希望的中心点知node.get_center(),可是外部添加了,中心点就会改变.
+    改变也没事,可如果再想change_info的或,info位置就很难确定.我通过几何方法解决了,但使用.animate方法
+    产生动画,会有些奇怪.不过也没影响,可以通过Transform等来变换.
+    还有一个想法是通过remove方法,先移除index,然后获取中心,之后再添加.这样似乎也行,但.animate方法
+    不知道是否奇怪.
 """
 
 
@@ -77,6 +86,7 @@ class SingleNode(RoundedRectangle):
         self.set_stroke(color=BLACK, opacity=0.9)
         self.set_fill(color=node_normal_color, opacity=1)
 
+        # self.node_center = self.get_center() 单纯地这个弄,无法动态改变其center,只是一个初始的固定值.
         self.set_info()
         self.scale(0.7)
 
@@ -134,15 +144,16 @@ class SingleNode(RoundedRectangle):
         if tex.width > self.width:
             tex.set(width=self.width - 0.2)
 
-        tex.move_to(self.get_center())
+        tex.move_to(self.get_node_center())
         tex.set_color(self.stroke_color)
         self.tex = tex
 
         self.add(tex)
+
         return self
 
-    def change_info(self, change_info="1", height=0.3, width=None):
-        self.set_info(change_info, height, width)
+    def change_info(self, info="1", height=0.3, width=None):
+        self.set_info(info, height, width)
         return self.tex
 
     def set_node_color(self):
@@ -163,7 +174,7 @@ class SingleNode(RoundedRectangle):
         index = MathTex(f"{index}")
         index.set(height=height).next_to(self, direction, buff=buff)
         index.set_color(color=color)
-        self.add(index)
+        self.add(index) # 这里将index添加到这里后,会存在一个问题,就是结点整体重心下移,导致后续info更改信息无法准确放置到矩形中间.
         self.index:MathTex = index
 
         return index
@@ -177,10 +188,26 @@ class SingleNode(RoundedRectangle):
         color=BLACK,
     ):
         index = self._init_index(index, height, direction, buff, color)
+        self.index_buff = buff
 
         return index
 
     def remove_index(self):
         if hasattr(self, "index"):
             self.remove(self.index)
+
+    def get_node_center(self):
+        # todo 这里通过index来隐式地获取node重心,没问题.但是如果.animatechange_info的话(或者及其拓展方法),动画会很奇怪.
+        
+        if hasattr(self, "index"):
+            #todo 还有一种方式是remove后,再add.
+            vector = self.index.get_center() - self.index.get_bottom()
+            length = np.linalg.norm(vector)
+            bottom = Dot(self.index.get_center()).shift(UP*(length + self.index_buff)).get_center()
+            center = (bottom + self.get_top()) / 2
+        else:
+            center = self.get_center()
+
+        return center
+
 

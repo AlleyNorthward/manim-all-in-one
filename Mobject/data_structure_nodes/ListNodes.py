@@ -1,5 +1,5 @@
 from manim import*
-from SingleNode import SingleNode
+from .SingleNode import SingleNode
 from typing import cast
 
 #_日志 
@@ -8,21 +8,14 @@ from typing import cast
     @auther 巷北
     @time 2025.9.21 21:25
     从SingleNode中分支出来,正在做着下一步的规划
+    ...
+    @auther 巷北
+    @time 2025.9.21 19:31
+    添加了change_info接口,明白了对象通过add添加后可能会产生的问题.
 """
 #_待办
 """
-    刚才刚添加了待办,怎么没了...默认状态对s[0] 使用change_info修改info,视觉上靠下,不知道是SingleNode问题还是ListNodes问题.
-    源代码
-    
-from manim import *
-from ListNodes import ListNodes
-class Test(Scene):
-    def construct(self):
-        self.camera.background_color = "#ece6e2"
-        s = ListNodes()
-        s.set_indexes(["3", '4', "44", "444", '234'])
-        # s[0].change_info("3")
-        self.add(s)
+无    
 
 """
 
@@ -104,10 +97,28 @@ class ListNodes(VGroup):
 
         return indexes
 
-    def scale_single_node_infos(self, index=0, scale_factor=0.4):
+    def scale_single_node_info(self, index=0, scale_factor=0.4):
         node = self[index]
         node.tex.scale(scale_factor)
 
     def scale_nodes_infos(self: VGroup, indexes: list, scale_factors: list):
         for index, scale_factors in zip(indexes, scale_factors):
             self.scale_single_node_infos(index, scale_factors)
+
+    def change_single_node_info(self, index, info):
+
+        # 我知道了.因为添加了index,所以作为组的话,整体的重心就会下移,这样就会产生很多问题.
+        # 首先,组重心下移,为什么还会影响到子对象的重心?
+        tex = self[index].change_info(info)
+        
+        #todo 其实是设置好了,但也只是缓和了一下.修改内部相关参数,通过add可以
+        # 添加,但是动画显示的话,会比较奇怪,所以无法动态改变
+
+        # 想了想,这里还是只是提供静态改变info的方法吧,不提过.animate的方法.因为动态转换的话,
+        #可以直接使用Transform或者ReplacementTransform,不用考虑位置关系.
+
+        return tex
+
+
+
+

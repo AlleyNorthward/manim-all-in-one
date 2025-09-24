@@ -463,16 +463,3 @@ class SingleEye(VGroup):
         )
     
 
-
-
-
-    
-        
-
-    
-
-
-
-
-
-
