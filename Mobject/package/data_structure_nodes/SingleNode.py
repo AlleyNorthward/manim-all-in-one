@@ -58,7 +58,7 @@ from itertools import cycle
 """
 # 待办记录
 """
-    打算更改继承, 将RoundedRectangle换成VGroup.必须要更改的,因为后续会有很多继承它的,如果弄不好,影响范围波及较大  完成
+    todo 是否需要提供remove info、remove index方法呢?
 """
 
 class SingleNode(VGroup):
@@ -84,6 +84,7 @@ class SingleNode(VGroup):
         height=1.4,
         width=2.1,
         stroke_width=10,
+        isindex = False,
         **kwargs,
     ):  
 
@@ -94,6 +95,8 @@ class SingleNode(VGroup):
         self.roundedrectangle = self._init_roundedrectangle(corner_radius, height, width, stroke_width)
         self.set_info()
         self.scale(0.7)
+        if isindex:
+            self.set_index()
 
     def _init_roundedrectangle(
             self,
@@ -229,7 +232,7 @@ class SingleNode(VGroup):
         index = self._init_index(index, height, direction, buff, color)
         self.index_buff = buff
 
-        return index
+        return self 
 
 
 
