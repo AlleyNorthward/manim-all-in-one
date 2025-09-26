@@ -17,6 +17,7 @@ from typing import cast
     @auther 巷北
     @time 2025.9.26 12:43
     修复了一些小bug,重新测试了一下动画,调用没太大问题.
+    更名,将ListNodes更名为SequentialList
 """
 #_待办
 """
