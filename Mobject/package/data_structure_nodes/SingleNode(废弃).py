@@ -46,22 +46,13 @@ from itertools import cycle
     产生动画,会有些奇怪.不过也没影响,可以通过Transform等来变换.
     还有一个想法是通过remove方法,先移除index,然后获取中心,之后再添加.这样似乎也行,但.animate方法
     不知道是否奇怪.
-    ...
-    @auther 巷北
-    @time 2025.9.26 8:33
-    后续回溯时又发现,添加index的话,scale又会存在问题.直接解决的是直接去除tex,避免一起放缩.谁知后面又添加了
-    index对象,这样导致scale的话,index又会出现问题.所以又用同样的方法去除了index, 不知道manim本身有没有很好
-    解决这个问题的方案.
-    整体上进行了较大革新,继承了VGroup,移除了一些不必要的代码,优化了代码结构.
-    提供了是否可以animate注释,避免日后产生问题.
-    ...
 """
 # 待办记录
 """
-    打算更改继承, 将RoundedRectangle换成VGroup.必须要更改的,因为后续会有很多继承它的,如果弄不好,影响范围波及较大  完成
+    打算更改继承, 将RoundedRectangle换成VGroup.必须要更改的,因为后续会有很多继承它的,如果弄不好,影响范围波及较大
 """
 
-class SingleNode(VGroup):
+class SingleNode(RoundedRectangle):
 
     cycle_color = cycle(
         [
@@ -85,43 +76,30 @@ class SingleNode(VGroup):
         width=2.1,
         stroke_width=10,
         **kwargs,
-    ):  
-
+    ):
         super().__init__(
+            corner_radius=corner_radius,
+            width=width,
+            height=height,
+            stroke_width=stroke_width,
             **kwargs,
         )
 
-        self.roundedrectangle = self._init_roundedrectangle(corner_radius, height, width, stroke_width)
+        node_normal_color = "#FFE4E1"
+        self.set_stroke(color=BLACK, opacity=0.9)
+        self.set_fill(color=node_normal_color, opacity=1)
+
+        # self.node_center = self.get_center() 单纯地这个弄,无法动态改变其center,只是一个初始的固定值.
         self.set_info()
         self.scale(0.7)
 
-    def _init_roundedrectangle(
-            self,
-            corner_radius,
-            height,
-            width,
-            stroke_width,
-    ):
-        roundedrectangle = RoundedRectangle(
-            corner_radius=corner_radius,
-            height = height,
-            width = width,
-            stroke_width = stroke_width
-        )
-        node_normal_color = "#FFE4E1"
-        roundedrectangle.set_stroke(color = BLACK, opacity=0.9)
-        roundedrectangle.set_fill(color = node_normal_color, opacity=1)
-
-        self.add(roundedrectangle)
-        return roundedrectangle
-
-    def scale(self, scale_factor: float,**kwargs):
-
-        self.roundedrectangle.set_stroke(width=scale_factor * self.roundedrectangle.stroke_width)
+    def scale(self, scale_factor: float, **kwargs):
+        self.remove(self.tex)
+        self.set_stroke(width=scale_factor * self.stroke_width)
+        self.add(self.tex)
         return super().scale(scale_factor, **kwargs)
 
-    @classmethod
-    def get_cycle_color(cls):
+    def get_cycle_color(self):
         # 追求的是颜色的专一性还是颜色的多样性?
         cycle_color = cycle(
             [
@@ -151,7 +129,7 @@ class SingleNode(VGroup):
         }
         return (cycle_color, list(color_name.values()))
 
-    def set_info(self, info="1", height=0.3, width=None, color = BLACK):
+    def set_info(self, info="1", height=0.3, width=None):
         if hasattr(self, "tex"):
             self.remove(self.tex)
             del self.tex
@@ -169,40 +147,29 @@ class SingleNode(VGroup):
         if tex.width > self.width:
             tex.set(width=self.width - 0.2)
 
-        tex.move_to(self.roundedrectangle.get_center())
-        tex.set_color(color)
+        tex.move_to(self.get_node_center())
+        tex.set_color(self.stroke_color)
         self.tex = tex
-
-        isremove = False # 这些是保持层级结构,0是roundedrectangle,1是info,2是index
-        if hasattr(self, "index"):
-            isremove = True
-            index = self.index # remove并不会销毁内存地址,所以可以直接这样赋等.
-            self.remove(self.index)
 
         self.add(tex)
 
-        if isremove:
-            self.add(index)
+        return self
 
-        return self  # 可以链式调用,而不是为了animate
-
-    def change_info(self, info="1", height=0.3, width=None, color = BLACK):
-        # 不可animate
-
-        self.set_info(info, height, width, color)
+    def change_info(self, info="1", height=0.3, width=None):
+        self.set_info(info, height, width)
         return self.tex
 
     def set_node_color(self):
-        # 可以animate
-        self.roundedrectangle.set_fill(color=next(SingleNode.cycle_color))
+        self.remove(self.tex)
+        self.set_fill(color=next(SingleNode.cycle_color))
         self.add(self.tex)
-        
         return self
 
     def remove_node_color(self):
-        # 可以animate
         node_normal_color = "#FFE4E1"
-        self.roundedrectangle.set_fill(color=node_normal_color)
+        self.remove(self.tex)
+        self.set_fill(color=node_normal_color)
+        self.add(self.tex)
         return self
 
     def _init_index(self, index, height, direction, buff, color):
@@ -223,13 +190,27 @@ class SingleNode(VGroup):
         buff=0.1,
         color=BLACK,
     ):
-        # 不可animate 可以通过transform进行直接转换
-        if hasattr(self, "index"):
-            self.remove(self.index)
         index = self._init_index(index, height, direction, buff, color)
         self.index_buff = buff
 
         return index
 
+    def remove_index(self):
+        if hasattr(self, "index"):
+            self.remove(self.index)
+
+    def get_node_center(self):
+        # todo 这里通过index来隐式地获取node重心,没问题.但是如果.animatechange_info的话(或者及其拓展方法),动画会很奇怪.
+        
+        if hasattr(self, "index"):
+            #todo 还有一种方式是remove后,再add.
+            vector = self.index.get_center() - self.index.get_bottom()
+            length = np.linalg.norm(vector)
+            bottom = Dot(self.index.get_center()).shift(UP*(length + self.index_buff)).get_center()
+            center = (bottom + self.get_top()) / 2
+        else:
+            center = self.get_center()
+
+        return center
 
 

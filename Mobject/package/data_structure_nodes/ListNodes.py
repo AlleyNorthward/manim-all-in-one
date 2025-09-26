@@ -1,3 +1,4 @@
+
 from manim import*
 from .SingleNode import SingleNode
 from typing import cast
@@ -12,6 +13,10 @@ from typing import cast
     @auther 巷北
     @time 2025.9.21 19:31
     添加了change_info接口,明白了对象通过add添加后可能会产生的问题.
+    ...
+    @auther 巷北
+    @time 2025.9.26 12:43
+    修复了一些小bug,重新测试了一下动画,调用没太大问题.
 """
 #_待办
 """
@@ -98,14 +103,18 @@ class ListNodes(VGroup):
         return indexes
 
     def scale_single_node_info(self, index=0, scale_factor=0.4):
+        # 可.animate
         node = self[index]
         node.tex.scale(scale_factor)
+        return node.tex
 
     def scale_nodes_infos(self: VGroup, indexes: list, scale_factors: list):
-        for index, scale_factors in zip(indexes, scale_factors):
-            self.scale_single_node_infos(index, scale_factors)
+        # 可.animate
+        for index, scale_factor in zip(indexes, scale_factors):
+            self.scale_single_node_info(index, scale_factor)
 
-    def change_single_node_info(self, index, info):
+    def change_single_node_info(self, index, info:str):
+        # 不可.animate
 
         # 我知道了.因为添加了index,所以作为组的话,整体的重心就会下移,这样就会产生很多问题.
         # 首先,组重心下移,为什么还会影响到子对象的重心?
@@ -118,6 +127,11 @@ class ListNodes(VGroup):
         #可以直接使用Transform或者ReplacementTransform,不用考虑位置关系.
 
         return tex
+    
+    def change_nodes_info(self, indexes: list, infos: list):
+        # 不可.animate
+        for index, info, in zip(indexes, infos):
+            self.change_single_node_info(index, info)
 
 
 
