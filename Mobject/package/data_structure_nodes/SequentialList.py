@@ -24,7 +24,7 @@ from typing import cast
 
 """
 
-class ListNodes(VGroup):
+class SequentialList(VGroup):
     #_说明
     """
     @auther 巷北
