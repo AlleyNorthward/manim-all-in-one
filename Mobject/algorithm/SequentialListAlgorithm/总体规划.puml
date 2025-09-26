@@ -1,0 +1,28 @@
+@startuml 总体规划
+class C as "实现功能"{
+    ==基本功能==
+    ~ 线性表动态移动
+    # 线性表顺序存储
+    + 线性表初始化
+    - 线性表的销毁
+    ~ 线性表的清空
+    # 线性表的插入
+    + 线性表的删除
+    - 线性表的查找定位
+    ~ 线性表的遍历输出
+    ==地位描述==
+
+}
+class S as "SequentialListAlgorithm"{
+    ==继承对象==
+    SequentialListAlgorithm [是否合理?]
+    ==参数==
+    + arr: list [接受转换数组的]
+    + sqlist: SequentalList [抽象数组]
+    +  
+
+}
+
+
+
+@enduml
