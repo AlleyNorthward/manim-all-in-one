@@ -1,4 +1,8 @@
-from manim import *
+from manim import (
+    VGroup, RoundedRectangle, MathTex,
+    DOWN,
+    BLACK,
+)
 from itertools import cycle
 
 # 日志记录
