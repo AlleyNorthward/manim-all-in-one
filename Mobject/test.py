@@ -3,7 +3,7 @@ from package.MovingCode.MovingCode import MovingCode
 from package.ACreature.ACreature import ACreature
 from package.AlgorithmBanner.AlgorithmBanner import AlgorithmBanner
 from package.BulletedListBrace.BulletedListBrace import BulletedListBrace
-from package.data_structure_nodes.ListNodes import ListNodes, SingleNode
+from package.data_structure_nodes.SequentialList import SequentialList, SingleNode
 from package.MyCurvedLine.MyCurvedLine import MyCurvedLine
 
 #基本测试说明
@@ -69,11 +69,11 @@ class SingleNode_scene(Scene):
         s.set_index()
         self.add(s)
 
-class ListNodes_scene(Scene):
+class SequentialList_scene(Scene):
     def construct(self):
         self.camera.background_color = "#cee"
 
-        l = ListNodes()
+        l = SequentialList()
         l.set_indexes()
         l.change_single_node_info(0, "333")
 
