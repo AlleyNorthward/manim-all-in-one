@@ -59,6 +59,10 @@ from itertools import cycle
     整体上进行了较大革新,继承了VGroup,移除了一些不必要的代码,优化了代码结构.
     提供了是否可以animate注释,避免日后产生问题.
     ...
+    @auther 巷北
+    @time 2025.9.27 23:39
+    颜色设置上感觉又不太合理了.采用cycle的话,可以很简单/整洁,但是在实际操作的时候,某些动画中可能会产生动画颜色
+    的不确定性.所以下面改了一下颜色逻辑,但是又丧失了循环颜色的本意.后续可以再更改优化一下颜色设计条件.
 """
 # 待办记录
 """
@@ -67,23 +71,22 @@ from itertools import cycle
 
 class SingleNode(VGroup):
 
-    cycle_color = cycle(
-        [
-            "#FFE4E1",
-            "#DDA0DD",
-            "#7CFC00",
-            "#FFFF77",
-            "#33FFFF",
-            "#F08080",
-            "#5599FF",
-            "#FFAA33",
-            "#FFC0CB",
-            "#BC8F8F",
-        ]
-    )
+    colors = [
+        "#FFE4E1",
+        "#DDA0DD",
+        "#7CFC00",
+        "#FFFF77",
+        "#33FFFF",
+        "#F08080",
+        "#5599FF",
+        "#FFAA33",
+        "#FFC0CB",
+        "#BC8F8F",
+    ]
 
     def __init__(
         self,
+        info = '1',
         corner_radius=0.14,
         height=1.4,
         width=2.1,
@@ -97,11 +100,11 @@ class SingleNode(VGroup):
         )
 
         self.roundedrectangle = self._init_roundedrectangle(corner_radius, height, width, stroke_width)
-        self.set_info()
+        self.set_info(info)
         self.scale(0.7)
         if isindex:
             self.set_index()
-
+    
     def _init_roundedrectangle(
             self,
             corner_radius,
@@ -199,9 +202,9 @@ class SingleNode(VGroup):
         self.set_info(info, height, width, color)
         return self.tex
 
-    def set_node_color(self):
+    def set_node_color(self, i):
         # 可以animate
-        self.roundedrectangle.set_fill(color=next(SingleNode.cycle_color))
+        self.roundedrectangle.set_fill(color=SingleNode.colors[i])
         self.add(self.tex)
         
         return self
@@ -238,5 +241,12 @@ class SingleNode(VGroup):
 
         return self 
 
-
+    # 便于后续组输出可视化.eg. print(s.submobjects) s:SequentialList , 此时就会输出下面这段.
+    # 可以使用self.tex.set(tex_string = "3")这种方式修改字体显示.
+    # 如果信息为空,那么值则为None
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}("
+            f"{self.tex.get_tex_string()!r})"
+        ) if self.tex.get_tex_string()  else "None"
 

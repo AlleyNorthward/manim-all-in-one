@@ -60,10 +60,10 @@ class SequentialList(VGroup):
             ref_length = 1.342 * num
 
         if infos is None:
-            grps = [SingleNode().set_info(str(info)).set_node_color() for info in range(0, num)]
+            grps = [SingleNode().set_info(str(info)).set_node_color(info) for info in range(0, num)]
 
         else:
-            grps = [SingleNode().set_info(info).set_node_color() for info in infos]
+            grps = [SingleNode().set_info(info).set_node_color(i) for i, info in enumerate(infos)]
 
         self.add(*grps)
         self.arrange(RIGHT, buff = 0)
