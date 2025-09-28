@@ -1,8 +1,8 @@
-
 from manim import*
 from .SingleNode import SingleNode
 from typing import cast
-
+from typing import Generic, TypeVar
+T = TypeVar("T", bound=Mobject)
 #_日志 
 """
     ...
@@ -18,6 +18,10 @@ from typing import cast
     @time 2025.9.26 12:43
     修复了一些小bug,重新测试了一下动画,调用没太大问题.
     更名,将ListNodes更名为SequentialList
+    ...
+    @auther 巷北
+    @time 2025.9.28 14:00
+    添加了泛型,使得通过下标访问容器内部,能够明白其元素类型.
 """
 #_待办
 """
@@ -25,7 +29,7 @@ from typing import cast
 
 """
 
-class SequentialList(VGroup):
+class SequentialList(VGroup, Generic[T]):
     #_说明
     """
     @auther 巷北
@@ -134,6 +138,8 @@ class SequentialList(VGroup):
         for index, info, in zip(indexes, infos):
             self.change_single_node_info(index, info)
 
+    def __getitem__(self, index: int) -> T:
+        return super().__getitem__(index) 
 
 
 

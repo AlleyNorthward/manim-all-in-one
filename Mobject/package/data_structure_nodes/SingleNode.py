@@ -30,7 +30,7 @@ from itertools import cycle
     ...
     @auther 巷北
     @time 2025.9.20 23:30
-    设计了一下,用ListNodes继承SingleNode也不合理.因为ListNodes是组,而SingleNode是单一结点,设计了一下
+    设计了一下,用ListNodes继承SingleNode也不合理.因为ListNodes是组,而SingleNode是单一结点,思考了一下
     发现,还是继承VGroup好,之后再集成相关功能.
     另外,发现继承就必须要带有**kwargs,即使当前并没有东西要加入,因为底层会涉及manim相关的体系构建,都隐藏
     在**kwargs之中.我是clear_points发现报错了,重新添加回**kwargs才没问题.不过目前继承VGroup的话,不会有
@@ -44,9 +44,9 @@ from itertools import cycle
     ...
     @auther 巷北
     @time 2025.9.24 19:34
-    发现了基本问题,单纯创建node,没问题,node内部添加info没问题,node外部添加index有问题.这回改变整体层级.
-    最严重的问题就是中心点改变了.我们希望的中心点知node.get_center(),可是外部添加了,中心点就会改变.
-    改变也没事,可如果再想change_info的或,info位置就很难确定.我通过几何方法解决了,但使用.animate方法
+    发现了基本问题,单纯创建node,没问题,node内部添加info没问题,node外部添加index有问题.这会改变整体层级.
+    最严重的问题就是中心点改变了.我们希望的中心点知node.get_center(),可是外部添加了对象,中心点就会改变.
+    改变也没事,可如果再想change_info的话,info位置就很难确定.我通过几何方法解决了,但使用.animate方法
     产生动画,会有些奇怪.不过也没影响,可以通过Transform等来变换.
     还有一个想法是通过remove方法,先移除index,然后获取中心,之后再添加.这样似乎也行,但.animate方法
     不知道是否奇怪.
@@ -62,7 +62,12 @@ from itertools import cycle
     @auther 巷北
     @time 2025.9.27 23:39
     颜色设置上感觉又不太合理了.采用cycle的话,可以很简单/整洁,但是在实际操作的时候,某些动画中可能会产生动画颜色
-    的不确定性.所以下面改了一下颜色逻辑,但是又丧失了循环颜色的本意.后续可以再更改优化一下颜色设计条件.
+    的不确定性.所以下面改了一下颜色逻辑,但是又丧失了循环颜色的本意.后续可以再更改优化一下颜色设计方案.
+    ...
+    @auther 巷北
+    @time 2025.9.28 13:07
+    稍微修改了一下set_info的逻辑,将"",设为".",使得后续动画可以正常进行.
+    添加了setter等,提供接口,以显式地改变repr,方便debug
 """
 # 待办记录
 """
@@ -167,17 +172,21 @@ class SingleNode(VGroup):
             del self.tex
 
         # todo 无法提供中文文本. 如果需要, 可以再添加, 只是加个判断语句就好了.
-        tex = MathTex(info)
+        if info == "":
+            info = "."
+            tex = MathTex(info).scale(0.001) # 抽象为空.潜在bug是,后续如果场景放缩,存在放大的可能 为了尽量避免,将放缩比例由0.01改为0.001
+        else:
+            tex = MathTex(info)
 
-        if height is not None:
-            tex.set(height=height)
-        if width is not None:
-            tex.set(width=width)
+            if height is not None:
+                tex.set(height=height)
+            if width is not None:
+                tex.set(width=width)
 
-        if tex.height > self.height:
-            tex.set(height=self.height - 0.2)
-        if tex.width > self.width:
-            tex.set(width=self.width - 0.2)
+            if tex.height > self.height:
+                tex.set(height=self.height - 0.2)
+            if tex.width > self.width:
+                tex.set(width=self.width - 0.2)
 
         tex.move_to(self.roundedrectangle.get_center())
         tex.set_color(color)
@@ -193,12 +202,36 @@ class SingleNode(VGroup):
 
         if isremove:
             self.add(index)
-
+        
+        self._node_value = self.tex.get_tex_string()
         return self  # 可以链式调用,而不是为了animate
+    
+    @property
+    def node_value(self):
+        return self._node_value
+    
+    @node_value.setter
+    def node_value(self, value):
+        # 可以直接self.node_value = value
+        # 但是下面还是给set_value()接口
+        self._node_value = value
+
+    def set_value(self, value: str):
+        # 其实用处不大,不过可以改变repr,更好地debug
+        # value为str,因为"0"不为空,而0视为空.
+        self.node_value = value
+
+    def get_info(self):
+        # 注意
+        """
+            这里的value跟上面的value不一致.这里只是得到tex的value.
+            become后,只能修改一下.
+        """
+
+        return self.tex.get_tex_string()
 
     def change_info(self, info="1", height=0.3, width=None, color = BLACK):
         # 不可animate
-
         self.set_info(info, height, width, color)
         return self.tex
 
@@ -243,10 +276,10 @@ class SingleNode(VGroup):
 
     # 便于后续组输出可视化.eg. print(s.submobjects) s:SequentialList , 此时就会输出下面这段.
     # 可以使用self.tex.set(tex_string = "3")这种方式修改字体显示.
-    # 如果信息为空,那么值则为None
+    # 如果信息为空,那么值则为None.不过注意,"0"不为空,0为空,可能出现问题
     def __repr__(self):
         return (
             f"{self.__class__.__name__}("
-            f"{self.tex.get_tex_string()!r})"
-        ) if self.tex.get_tex_string()  else "None"
+            f"{self.node_value!r})"
+        ) if self.node_value else "None"
 

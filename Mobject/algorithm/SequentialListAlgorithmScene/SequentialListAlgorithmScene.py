@@ -3,13 +3,29 @@ from package.data_structure_nodes.SingleNode import SingleNode
 from package.data_structure_nodes.SequentialList import SequentialList
 # 修改日志
 """
-
+    ...
+        @auther 巷北
+        @time 2025.9.28 11:03
+        还没写完呢,也不需要写日志,但是觉得比较重要,还是在这里记录一下.两种交换方式都没问题,但都有些小问题
+        整体del的,由于内部信息更新,导致每变换一次,其中两个结点颜色就会改变,可以在颜色统一的情况下使用.第二
+        个方法呢,由于我传入了个info为"",导致使用become时,整个结点不可见,转化出问题.解决方式是传入".",然后
+        通过scale_single_node_info()接口,缩放比例设为0.01,几乎就不可见了.
+        综上来看,如果希望用彩色,就用方法二,如果是单一颜色,就用方法一.
+        找了半天有没有分割子场景独立播放的方法,最后发现似乎没有.为什么有这个想法呢,因为写完Insert_Sq之后,发
+        现似乎有可能还要添加MovingCode,可是的我play都分发到每一个场景中了,如果要添加MovingCode,并直接放到
+        Insert_Sq中,又缺少了最初始的那个味,因为这样又不能单独播放MovingCode了.所以我才想看看有没有分割子场景
+        的方法,能不能单独播放.况且,我也不一定是只有MovingCode跟着一起动,其余的参数,也会跟着一起变化的.所以
+        这就比较难受了,不知道有几个一块动,哈哈...不过这些也都不是问题,因为最困难的部分是Insert_Sq,实现完了之后,
+        可以选择弄些副本,这样就会好很多了...刚才又想到了一个问题,比如我有个ACreature,它在那动,然后边思考Inseret_Sq
+        动画,可是我这里的Insert_Sq没有接口,返回的也不是动画,没办法一起play.也只能重新写一个Insert_Sq,在里面的
+        play中添加ACreature相关动画.所以说,对于这种复合动画,有没有好的解决方案呢?
 """
 
 # 待办
 """
 
 """
+
 class SqListScene(Scene):
     def setup(self):
         self.camera.background_color = "#cee"
@@ -32,39 +48,68 @@ class SqListScene(Scene):
 
         return sqlist
     
-    # def insert_sq(            可惜,这个得到的是最终结果,我希望的是中间结果,所以没用了
-    #     self,
-    #     position,
-    #     elem
-    # ):
-    #     size = len(self.array) - 1
-
-    #     for i in range(size - 1, position - 2, -1):
-    #         self.array[i+1] = self.array[i]
-    #     self.array[position - 1] = elem
-
-    #     return self.array
-        
-    def updating_sq(
+    def insert_sq(            
         self,
-        sqlist: SequentialList,
-    ):  
-        self.remove(sqlist)
-        del sqlist
+        position,
+        elem
+    ):
+        # 这个position默认下标从0开始的.
+        # position = position - 1 # 如果想让默认下标从q开始,可以打开这个注释
 
-        new_array = self.array
+        size = len(self.array) - 1
 
-        sqlist = self.init_sq(new_array, self.ref_length)
-        self.add(sqlist)
+        for i in range(size - 1, position - 1, -1): # 这里position需要减一,因为取不到,不像C++可以>=.
+            self.array[i+1] = self.array[i]
+        self.array[position] = elem
+
+        return self.array
+
+    def move_node(
+        self,
+        target:SingleNode,
+        base:SingleNode,
+        transform_time = 2
+    ):
+        
+        base = base.save_state()
+        target = target.save_state()
+        self.play(
+            base.animate.move_to(target.get_center()),
+            target.animate.move_to(base.get_center()),
+            run_time = transform_time
+        )
+        base.become(target.saved_state).move_to(base.saved_state)
+        target.become(base.saved_state).move_to(target.saved_state)
+        base.set_value(target.get_info())
+        target.set_value(base.get_info())
+
+        return target
+        
     
     def insert_node(
         self,
         singlenode: SingleNode, # 待插入结点
         node_sq: SingleNode, # 线性表中结点
+        insert_time = 2,
     ):
+        singlenode.save_state()
+        node_sq.save_state()
         self.play(
-            ReplacementTransform(node_sq, singlenode)
+            AnimationGroup(
+                singlenode.animate.move_to(node_sq.get_center()),
+                FadeOut(node_sq)
+            ),
+            run_time = insert_time
         )
+        singlenode.become(node_sq.saved_state).move_to(singlenode.saved_state)
+        node_sq.become(singlenode.saved_state).move_to(node_sq.saved_state)
+        node_sq.set_value(singlenode.get_info())
+
+        # 会突然显现.一定要注意,become后,组中对象的引用,就是singlenode了,而singlenode,还在原来位置!!!
+        # 一定会忘了,留个念想,这是最关键部分!
+        self.remove(singlenode)
+    
+
 
 
 class SequentialListAlgorithmScene(SqListScene):
@@ -87,32 +132,18 @@ class SequentialListAlgorithmScene(SqListScene):
     
     def Insert_Sq(
         self,
-        sqlist: SequentialList,
+        sqlist: SequentialList[SingleNode],
         position: int,
-        singlenode: SingleNode
+        singlenode: SingleNode,
+        transform_time = 2,
+        insert_time = 2,
     ):
+        # 目光别太短浅.后续这部分代码,可能会跟随展示代码一起移动,所以可能会添加许多东西.
         size = len(sqlist) - 1
-        for i in range(size - 1, position - 2, -1):
-            base = sqlist[i + 1].save_state()
-            target = sqlist[i].save_state()
-            self.play(
-                base.animate.move_to(target.get_center()),
-                target.animate.move_to(base.get_center())
-            )
-            base.become(target.saved_state).move_to(base.saved_state)
-            target.become(base.saved_state).move_to(target.saved_state)
-            print(base.get_center())
-            print(target.get_center())
+        for i in range(size - 1, position - 1, -1):
+            target = self.move_node(sqlist[i], sqlist[i + 1], transform_time)
 
-            # self.updating_sq(
-            #     sqlist,
-            # )
-
-        # self.insert_node(
-            # singlenode,
-            # sqlist[position - 1]
-        # )
-
+        self.insert_node(singlenode, target, insert_time)
 
 
 
