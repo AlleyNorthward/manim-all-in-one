@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 ASSETS_DIR = None
 
-def svg_path(mode, dir_name):
+def svg_path(mode, dir_name, i):
     #_代码示例
     """
             待装饰函数/方法.
@@ -17,7 +17,7 @@ def svg_path(mode, dir_name):
             m = self.get_svg(0) 同上
             m = self.get_svg(0, mode = 's')同上.
     """
-    ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets" / dir_name
+    ASSETS_DIR = Path(__file__).resolve().parents[i] / "assets" / dir_name
     def decorator(func):
         def wrapper(self, *args, **kwargs):
             current_mode = kwargs.pop("mode", mode)

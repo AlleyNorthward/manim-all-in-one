@@ -1,7 +1,7 @@
 from manim import(
     Code, Rectangle, SVGMobject, VGroup,
     Transform, AnimationGroup,
-    RIGHT, LEFT, UP, DOWN,
+    RIGHT, LEFT, UP,
     YELLOW,
     override_animate
 )
@@ -22,6 +22,9 @@ from utils.路径装饰器 import svg_path  #! 注意路径修改
     将get_svg()重命名为_init_svg(),并新定义get_svg(),返回_init_svg()(因为被装饰器修饰后, 无法直接访问mode, 而是通过path获取的.其实是私有方法,不如添加接口.)
     增添了代码示例
     ...
+    @auther 巷北
+    @time 2025.9.29
+    修改了路径装饰器,让它更具备一般性.
 """
 #! 经过测试,无法将svg、rect添加到self中,以后也别做尝试了.需要注意的是, 最后再去创建移动对象,要不然移动code后,移动对象不还在原处.
 #_解决方法 想了想,只是在scale、move、next_to、align_to等中存在问题, 那我们可以重写一下这些方法.以前也没重写过,可以尝试一下.
@@ -155,9 +158,8 @@ class MovingCode(Code):
         # _弃案 不需要添加
         return rect
     
-    @svg_path("flower", "MovingCode")
+    @svg_path("flower", "MovingCode", 1)
     def _init_svg(self,path, start):
-
         svg = SVGMobject(path)
         svg.scale(0.2)
         if start == 0:
