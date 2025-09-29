@@ -68,16 +68,10 @@ from itertools import cycle
     @time 2025.9.28 13:07
     稍微修改了一下set_info的逻辑,将"",设为".",使得后续动画可以正常进行.
     添加了setter等,提供接口,以显式地改变repr,方便debug
-    ...
-    @autherr 巷北
-    @time 2025.9.29 22:56
-    去除了set_index中的self.index_buff,这是之前遗留问题,可以去old-version查找.
-
 """
 # 待办记录
 """
     todo 是否需要提供remove info、remove index方法呢?
-    添加__str__,似乎scene.mobject输出的是它.
 """
 
 class SingleNode(VGroup):
@@ -276,8 +270,9 @@ class SingleNode(VGroup):
         if hasattr(self, "index"):
             self.remove(self.index)
         index = self._init_index(index, height, direction, buff, color)
+        self.index_buff = buff
 
-        return index
+        return self 
 
     # 便于后续组输出可视化.eg. print(s.submobjects) s:SequentialList , 此时就会输出下面这段.
     # 可以使用self.tex.set(tex_string = "3")这种方式修改字体显示.
