@@ -25,7 +25,7 @@ from package.data_structure_nodes.SequentialList import SequentialList
 """
 
 """
-
+MovingCameraScene
 class SqListScene(Scene):
     def setup(self):
         self.camera.background_color = "#cee"
