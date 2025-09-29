@@ -68,6 +68,12 @@ from itertools import cycle
     @time 2025.9.28 13:07
     稍微修改了一下set_info的逻辑,将"",设为".",使得后续动画可以正常进行.
     添加了setter等,提供接口,以显式地改变repr,方便debug
+    ...
+    @auther 巷北
+    @time 2025.9.29 23:17
+    诶,有些奇怪,刚才修改了,git push了也,但是没同步...
+    去掉setinfo中self.index_buff = buff这句并返回index.注意这是遗留问题,详细可见old-version中的讲述.
+
 """
 # 待办记录
 """
@@ -270,9 +276,8 @@ class SingleNode(VGroup):
         if hasattr(self, "index"):
             self.remove(self.index)
         index = self._init_index(index, height, direction, buff, color)
-        self.index_buff = buff
 
-        return self 
+        return index
 
     # 便于后续组输出可视化.eg. print(s.submobjects) s:SequentialList , 此时就会输出下面这段.
     # 可以使用self.tex.set(tex_string = "3")这种方式修改字体显示.
