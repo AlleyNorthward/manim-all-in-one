@@ -7,6 +7,7 @@ from manim import(
 )
 import numpy as np
 
+
 class MyCurvedLine(VGroup):
 
     """
