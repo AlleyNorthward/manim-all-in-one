@@ -1,0 +1,24 @@
+@startuml 方法一设计
+class S as "SequentialListAlgorithm"{
+    ==继承对象==
+    SequentialListAlgorithm [是否合理?]
+    ==参数==
+    + arr: list [接受转换数组的]
+    + sqlist: SequentalList [抽象数组]
+    ==方法==
+    + swap() [只是做节点交换逻辑设定](可无)
+    + InitList_Sq()[初始化线性表]
+    + DestroyList_Sq()[销毁]
+    + ListClear_Sq()[清空]
+    + Listinsert_Sq()[插入]
+    + insert_node()[单纯为插入节点设定]
+    + ListErase_Sq()[删除]
+    + ListFind_Sq()[查找定位]
+    + PrintElem()[输出]
+    + ListTraverse_Sq()[遍历]
+    ==前提描述==
+    开始之前,我们需要再重新归整一下manim中,
+    结点摆放/调换逻辑,避免深入编写的时候,又存
+    等万事具备后,全身心投入在类的编写之中.
+}
+@enduml
