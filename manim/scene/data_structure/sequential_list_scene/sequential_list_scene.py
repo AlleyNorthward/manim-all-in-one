@@ -1,6 +1,7 @@
 from manim import *
 from mobject.data_structure_nodes.single_node import SingleNode
 from mobject.data_structure_nodes.sequential_list import SequentialList
+from utils.data_structure.decorators import override_insert_sq
 # 修改日志
 """
     ...
@@ -19,6 +20,16 @@ from mobject.data_structure_nodes.sequential_list import SequentialList
         可以选择弄些副本,这样就会好很多了...刚才又想到了一个问题,比如我有个ACreature,它在那动,然后边思考Inseret_Sq
         动画,可是我这里的Insert_Sq没有接口,返回的也不是动画,没办法一起play.也只能重新写一个Insert_Sq,在里面的
         play中添加ACreature相关动画.所以说,对于这种复合动画,有没有好的解决方案呢?
+        ...
+        @auther 巷北
+        @time 2025.9.30 12:46
+        上面说的想到了两个解决方式.第一个是通过AnimationGroup,使用copy采用组合形式设计.第二个采用装饰器,通过传入
+        系列,将复杂逻辑拆分到装饰器中,外层只需要做一些准备动作即可.为起到练习python的目的,这两种形式打算都涉及一下,
+        提供多问题的解决方案.
+        装饰器的设计完了.代码几十行,用了两个多小时...其实直接写,就行,但是站在架构角度来看,不怎么样.明明有很多好的设计
+        模式,却偏偏选择最容易方法--直接写,感觉不太入流,哈哈...现在的话,我如果想添加一个movingcode,可以直接在装饰器
+        中设立好mode,代码端仍需自己写(由于play是不可控的,无法动态的添加和清除,),用户调用端可以直接根据mode,来选择自己
+        想用的模式.接口固定不变,都是Insert_Sq,避免了重新设立不同的Insert_Sq的方式.
 """
 
 # 待办
@@ -64,9 +75,16 @@ class SqListScene(Scene):
         self.array[position] = elem
 
         return self.array
-
-    def move_node(
-        self,
+    
+    def move_node(self, *args, mode = "zero", **kwargs):
+        if hasattr(SqListScene.move_node, "_overrides"):
+            if mode in SqListScene.move_node._overrides:
+                target = SqListScene.move_node._overrides[mode](self, *args, **kwargs)
+            return target
+    
+    @override_insert_sq(move_node, mode = "zero")
+    def _only_move_node(
+        self,                     
         target:SingleNode,
         base:SingleNode,
         transform_time = 2
@@ -85,7 +103,7 @@ class SqListScene(Scene):
         target.set_value(base.get_info())
 
         return target
-        
+    
     
     def insert_node(
         self,
@@ -120,6 +138,8 @@ class SqListScene(Scene):
             become之后,二者的引用转变了,node_sq代指的singlenode,而singlenode代指的node_sq.最后时刻,
             node_sq会突然消失,而singlenode又会显现,所以我进行了重新add和remove.
             不过感觉还是没说明白.先这么理解吧,后续有问题再说.
+
+            这里还需要去做一个极小的测试,才能更加深入明白.
         """
     
 
@@ -141,6 +161,13 @@ class SequentialListScene(SqListScene):
         想到两种方式,第一种是用VGroup承接每一次的变化,从上到下依次展示.第二种是使用save_state+become,强行
         扭转内部排列层级.
         为了避免之前混乱思想,这次写这个代码前,用plantuml好好地规划一下,要不然后面总免不了修改.
+        ...
+        @auther 巷北
+        @time 2025.9.30 8:34
+        思考了一下,为了具有一般性,能够与其它的动画灵活播放,下面的方法应返回所有的动画,而不是调用方法,播放动画.
+        这样的话,需要很多个VGroup的副本,每转换一次,都需要切换副本.但是copy是浅拷贝,对VGroup整体copy,不知道其
+        内部是否可以统一copy.另外,整体copy占用资源有些大,能否直接替换掉移动后的结点呢?可以做做测试,尝试一下,
+        看看效果如何.
     """
     
     def Insert_Sq(
@@ -148,17 +175,16 @@ class SequentialListScene(SqListScene):
         sqlist: SequentialList[SingleNode],
         position: int,
         singlenode: SingleNode,
+        mode = "zero",
         transform_time = 2,
         insert_time = 2,
     ):
         # 目光别太短浅.后续这部分代码,可能会跟随展示代码一起移动,所以可能会添加许多东西.
         size = len(sqlist) - 1
         for i in range(size - 1, position - 1, -1):
-            target = self.move_node(sqlist[i], sqlist[i + 1], transform_time)
+            target = self.move_node(sqlist[i], sqlist[i + 1], transform_time, mode = mode)
 
         self.insert_node(singlenode, target, insert_time)
-
-
 
 
 
