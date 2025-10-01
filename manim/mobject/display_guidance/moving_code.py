@@ -5,7 +5,7 @@ from manim import(
     YELLOW,
     override_animate
 )
-from utils.路径装饰器 import svg_path  #! 注意路径修改
+from utils.svg_path import svg_path  #! 注意路径修改
 
 # _修改日志
 """
