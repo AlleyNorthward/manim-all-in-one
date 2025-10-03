@@ -1,0 +1,8 @@
+@startuml 04集合操作
+enum sO as "setOperation"{
+    + add()
+    + insert()
+    + add_to_back()
+    + remove()
+}
+@enduml

@@ -1,2 +1,2 @@
 from manim import *
-Scene
+Mobject

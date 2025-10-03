@@ -1,0 +1,27 @@
+@startuml 02魔法方法
+enum mM as "magicMethod"{
+    --<color:green>初始化--
+    + __init__()
+    ..<color:lightgreen>初始化子函数..
+    + reset_points()
+    + generate_points()
+    + init_colors()
+    --<color:pink>占位--
+    + __add__()
+    + __iadd__()
+    + __sub__()
+    + __isub__()
+    --<color:lightblue>含有子函数--
+    + __iter__()
+    + __len__()
+    + __getitem__()
+    --<color:orange>其他--
+    + __deepcopy__()
+    + __repr__()
+    + __getattr__()
+    --<color:purple>子函数--
+    + split()
+    + get_group_class()
+}
+
+@enduml

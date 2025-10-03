@@ -1,0 +1,8 @@
+@startuml 03类型检查
+enum tC as "typeChecking"{
+    --<color:lightskyblue>底层实现--
+    + _assert_valid_submobjects_internal()
+    --<color:pink>接口--
+    + _assert_valid_submobjects()
+}
+@enduml

@@ -1,0 +1,25 @@
+@startwbs 051property属性
+*[#skyblue] rescale_to_fit()
+**[#lightpink] stretch()
+***[#LightCoral]< apply_points_function_about_point()
+'https://github.com/ManimCommunity/manim/blob/main/manim/mobject/mobject.py#L1467
+****[#LightCyan] family_me mbers_with_points()
+'https://github.com/ManimCommunity/manim/blob/main/manim/mobject/mobject.py#L2409
+*****[#LightGoldenRodYellow] get_family()
+'https://github.com/ManimCommunity/manim/blob/main/manim/mobject/mobject.py#L2375
+******[#LightGray] remove_list_redundancies()
+*****[#LightGoldenRodYellow]< get_num_points()
+'https://github.com/ManimCommunity/manim/blob/main/manim/mobject/mobject.py#L2101
+****[#LightCyan]< get_critical_point()
+'https://github.com/ManimCommunity/manim/blob/main/manim/mobject/mobject.py#L2120
+*****[#LightGoldenRodYellow] get_extremum_along_dim()
+'https://github.com/ManimCommunity/manim/blob/main/manim/mobject/mobject.py#L2104
+*****[#LightGoldenRodYellow]< get_points_defining_boundary()
+'https://github.com/ManimCommunity/manim/blob/main/manim/mobject/mobject.py#L2098
+******[#LightGray]< get_all_points()
+'https://github.com/ManimCommunity/manim/blob/main/manim/mobject/mobject.py#L2088
+*******[#LightGreen]< get_merged_array()
+' https://github.com/ManimCommunity/manim/blob/main/manim/mobject/mobject.py#L2077
+**[#lightpink] scale() 
+***[#LightCoral] apply_points_function_about_point()
+@endwbs

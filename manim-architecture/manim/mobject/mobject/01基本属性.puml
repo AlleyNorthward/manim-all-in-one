@@ -1,0 +1,17 @@
+@startuml 01基本属性
+enum attr as "attributes"{
+    --<color:lightgreen>传入属性--
+    + color
+    + name
+    + dim
+    + target
+    + z_index
+    --<color:lightblue>初始化属性--
+    + point_hash
+    + submobjects
+    + updaters
+    + updating_suspended
+    --<color:orange>方法属性--
+    + points
+}
+@enduml

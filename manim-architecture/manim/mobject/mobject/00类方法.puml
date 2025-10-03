@@ -1,0 +1,14 @@
+@startuml 00类方法
+enum cM as "classMethod"{
+    --<color:lightskyblue>涉及属性--
+    + animation_overrides
+    + _original__init__
+    --<color:lightgreen>主要方法--
+    + __init_subclass__()
+    + set_default()
+    --<color:orange>内部函数--
+    + _add_intrinsic_animation_overrides()
+    + add_animation_override()
+}
+
+@enduml

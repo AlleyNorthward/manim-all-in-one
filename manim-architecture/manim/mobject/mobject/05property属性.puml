@@ -1,0 +1,33 @@
+@startuml 05property属性
+enum property as "property属性"{
+    --<color:lightgreen>基本--
+    + width
+    + height
+    + depth
+    --<color:lightskyblue>setter--
+    + width
+    + height
+    + depth
+    --<color:orange>涉及方法--
+    ..<color:pink>底层实现..
+    + reduce_across_dimension()
+    + rescale_to_fit()
+    ..<color:blue>接口..
+    + length_over_dim()
+    + scale_to_fit_width()
+    + scale_to_fit_height()
+    + scale_to_fit_depth()
+}
+exception rescale as "rescale_to_fit方法"{
+    ==<color:purple>当前方法==
+    + scale()
+    + stretch()
+    --<color:coral>scale中包含方法--
+    --<color:lightpink>stretch中包含方法--
+    + apply_points_function_about_point()
+    __apply_points_function_about_point中包含方法__
+    + 
+}
+remove rescale
+' 写着写着发现函数调用的有些多啊...注释掉,换个方式写写
+@enduml

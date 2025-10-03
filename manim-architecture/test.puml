@@ -1,0 +1,8 @@
+@startuml test
+class MyClass {
+    +doSomething(): void
+    +getData(): string
+}
+
+MyClass : "Click here to learn more" <url:https://www.example.com/docs>
+@enduml
