@@ -1,8 +1,4 @@
-@startuml test
-class MyClass {
-    +doSomething(): void
-    +getData(): string
-}
-
-MyClass : "Click here to learn more" <url:https://www.example.com/docs>
-@enduml
+@startgantt test
+[task1] requires 10 days
+[task1] links to [[http://plantuml.com]]
+@endgantt
