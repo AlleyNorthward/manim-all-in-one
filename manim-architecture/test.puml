@@ -1,4 +1,6 @@
 @startgantt test
 [task1] requires 10 days
+[task2] requires 20 days
 [task1] links to [[http://plantuml.com]]
+[task2] links to [[https://abe.com]]
 @endgantt

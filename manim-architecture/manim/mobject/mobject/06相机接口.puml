@@ -1,0 +1,7 @@
+@startuml 06相机接口
+Enum cameraInterface as "cI"{
+    + get_image()
+    + show()
+    + save_image()
+}
+@enduml

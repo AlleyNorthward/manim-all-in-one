@@ -1,4 +1,4 @@
-@startuml 05property属性
+@startuml 05property属性0
 enum property as "property属性"{
     --<color:lightgreen>基本--
     + width

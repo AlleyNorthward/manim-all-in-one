@@ -1,4 +1,4 @@
-@startwbs 051property属性
+@startwbs 05property属性1
 *[#skyblue] rescale_to_fit()
 **[#lightpink] stretch()
 ***[#LightCoral]< apply_points_function_about_point()
