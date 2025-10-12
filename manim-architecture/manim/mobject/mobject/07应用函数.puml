@@ -1,0 +1,12 @@
+@startuml 07应用函数
+Enum transformOperations as "tO"{
+    + apply_to_family()
+    + apply_funciton()
+    + apply_points_function_about_point()
+    + apply_function_to_position()
+    + apply_funciton_to_submobject_positions()
+    + apply_matrix()
+    + apply_complex_function()
+    + 
+}
+@enduml
