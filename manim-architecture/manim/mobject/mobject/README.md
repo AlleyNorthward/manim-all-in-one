@@ -40,7 +40,7 @@
 
 <p align="center">
     <a href = "https://github.com" target="_blank">
-        <img src="../../../out/manim/mobject/mobject/00类方法.svg" alt="类方法图片" title = "类方法">
+        <img src="../../../assets/manim/mobject/mobject/00类方法.svg" alt="类方法图片" title = "类方法">
     </a>
 </p>
 
@@ -61,7 +61,7 @@
 
 <p align="center">
     <a href = "https://github.com" target="_blank">
-        <img src="../../../out/manim/mobject/mobject/01基本属性.svg" alt="基本属性图片" title = "基本属性">
+        <img src="../../../assets/manim/mobject/mobject/01基本属性.svg" alt="基本属性图片" title = "基本属性">
     </a>
 </p>
 
@@ -81,7 +81,7 @@
 
 <p align="center">
     <a href = "https://github.com" target="_blank">
-        <img src="../../../out/manim/mobject/mobject/02魔法方法.svg" alt="魔法方法图片" title = "魔法方法">
+        <img src="../../../assets/manim/mobject/mobject/02魔法方法.svg" alt="魔法方法图片" title = "魔法方法">
     </a>
 </p>
 
@@ -108,7 +108,7 @@
 
 <p align="center">
     <a href = "https://github.com" target="_blank">
-        <img src="../../../out/manim/mobject/mobject/03类型检查.svg" alt="类型检查图片" title = "类型检查">
+        <img src="../../../assets/manim/mobject/mobject/03类型检查.svg" alt="类型检查图片" title = "类型检查">
     </a>
 </p>
 
@@ -120,7 +120,7 @@
 
 <p align="center">
     <a href = "https://github.com" target="_blank">
-        <img src="../../../out/manim/mobject/mobject/04集合操作.svg" alt="集合操作图片" title = "集合操作">
+        <img src="../../../assets/manim/mobject/mobject/04集合操作.svg" alt="集合操作图片" title = "集合操作">
     </a>
 </p>
 
@@ -133,10 +133,10 @@
 
 <p align="center">
     <a href = "https://github.com" target="_blank">
-        <img src="../../../out/manim/mobject/mobject/05property属性0.svg" alt="property属性图片" title = "property属性">
+        <img src="../../../assets/manim/mobject/mobject/05property属性0.svg" alt="property属性图片" title = "property属性">
     </a>
     <a href = "https://github.com" target="_blank">
-        <img src="../../../out/manim/mobject/mobject/05property属性1.svg" alt="rescale_to_fit拆解图片" title = "rescale_to_fit函数拆解">
+        <img src="../../../assets/manim/mobject/mobject/05property属性1.svg" alt="rescale_to_fit拆解图片" title = "rescale_to_fit函数拆解">
     </a>
 </p>
 
@@ -169,7 +169,7 @@
 
 <p align="center">
     <a href = "https://github.com" target="_blank">
-        <img src="../../../out/manim/mobject/mobject/06相机接口.svg" alt="相机接口图片" title = "相机接口">
+        <img src="../../../assets/manim/mobject/mobject/06相机接口.svg" alt="相机接口图片" title = "相机接口">
     </a>
 </p>
 
